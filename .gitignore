@@ -1,4 +1,5 @@
 /.pytest_cache
 /__pycache__
 /arsenal.png
-/main.py
+main.py
+/main.ipynb
