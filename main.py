@@ -18,12 +18,49 @@ async def main():
         await asyncio.sleep(2) # Give it a little extra time to render after dismissal
 
         print("Loaded URL:", page.url)
-        # get HTML content of the page as a string
-        content = await page.get_content()
-        # NOTE: Content will now be very long, so avoid printing the whole thing
-        print("Page content length:", len(content)) 
-        scores= await page.select("#content > div.scorebox")
-        print("Scores found:", scores.text_all) 
+        # # get HTML content of the page as a string
+        # content = await page.get_content()
+        # # NOTE: Content will now be very long, so avoid printing the whole thing
+        # print("Page content length:", len(content)) 
+        # scores= await page.select("#content > div.scorebox")
+        # texts = scores.text_all.split()
+        # print("Scorebox Texts:", texts)
+
+        home_team_name= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
+        print("Home team name:", home_team_name.text)
+        away_team_name= await page.select("#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
+        print("away team name:", away_team_name.text)
+        home_team_score= await page.select("#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
+        print("Home team score:", home_team_score.text)
+        away_team_score= await page.select("#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
+        print("away team score:", away_team_score.text)
+        home_team_xg= await page.select("#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
+        print("Home team XG:", home_team_xg.text)
+        away_team_xg= await page.select("#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
+        print("away team XG:", away_team_xg.text)
+
+        home_team_manager= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(5)")
+        print("Home team manager:", home_team_manager.text_all.split(":")[-1])
+        away_team_manager= await page.select("#content > div.scorebox > div:nth-child(2) > div:nth-child(5)")
+        print("away team manager:", away_team_manager.text_all.split(":")[-1])
+
+        home_team_capatin= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
+        print("Home team capatin:", home_team_capatin.text)
+        away_team_capatin= await page.select("#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
+        print("away team capatin:", away_team_capatin.text)
+
+        match_time= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime")
+        print("match time:", match_time.text_all.split()[0])
+
+        attendance= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
+        print("attendance:", attendance.text)
+
+        venue= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
+        print("venue:", venue.text)
+
+        officials= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small")
+        print("officials:", officials.text_all.strip().split("·"))
+
 
         
     except Exception as e:
