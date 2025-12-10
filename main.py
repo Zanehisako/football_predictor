@@ -90,8 +90,63 @@ async def main():
 
         home_team_fouls= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
         print("Home team fouls:", home_team_fouls.text)
-        away_team_fouls = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
+        away_team_fouls = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
         print("away team fouls:", away_team_fouls.text)
+
+        home_team_corners= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
+        print("Home team corners:", home_team_corners.text)
+        away_team_corners = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
+        print("away team corners:", away_team_corners.text)
+
+        home_team_crosses= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
+        print("Home team crosses:", home_team_crosses.text)
+        away_team_crosses = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
+        print("away team crosses:", away_team_crosses.text)
+
+        home_team_touches= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
+        print("Home team touches:", home_team_touches.text)
+        away_team_touches = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
+        print("away team touches:", away_team_touches.text)
+
+        home_team_tackels= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
+        print("Home team tackels:", home_team_tackels.text)
+        away_team_tackels = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
+        print("away team tackels:", away_team_tackels.text)
+
+        home_team_interceptions= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
+        print("Home team interceptions:", home_team_interceptions.text)
+        away_team_interceptions = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
+        print("away team interceptions:", away_team_interceptions.text)
+
+        home_team_aerials= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
+        print("Home team aerials:", home_team_aerials.text)
+        away_team_aerials = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
+        print("away team aerials:", away_team_aerials.text)
+
+        home_team_clearances= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
+        print("Home team clearances:", home_team_clearances.text)
+        away_team_clearances = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
+        print("away team clearances:", away_team_clearances.text)
+
+        home_team_offsides= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
+        print("Home team offsides:", home_team_offsides.text)
+        away_team_offsides = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
+        print("away team offsides:", away_team_offsides.text)
+
+        home_team_goal_kicks= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
+        print("Home team goal_kicks:", home_team_goal_kicks.text)
+        away_team_goal_kicks = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
+        print("away team goal_kicks:", away_team_goal_kicks.text)
+
+        home_team_throw_ins= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
+        print("Home team throw_ins:", home_team_throw_ins.text)
+        away_team_throw_ins = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
+        print("away team throw_ins:", away_team_throw_ins.text)
+
+        home_team_long_balls= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
+        print("Home team long_balls:", home_team_long_balls.text)
+        away_team_long_balls = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
+        print("away team long_balls:", away_team_long_balls.text)
 
 
 
