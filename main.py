@@ -81,6 +81,19 @@ async def main():
         away_team_save_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
         print("away team save_accuracy:", away_team_save_accuracy.text)
 
+        home_team_cards= await page.select("#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div")
+        home_team_cards_number =  home_team_cards.child_node_count
+        print("Home team cards:", home_team_cards_number)
+        away_team_cards = await page.select("#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div")
+        away_team_cards_number =  away_team_cards.child_node_count
+        print("away team cards:", away_team_cards_number)
+
+        home_team_fouls= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
+        print("Home team fouls:", home_team_fouls.text)
+        away_team_fouls = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
+        print("away team fouls:", away_team_fouls.text)
+
+
 
         
     except Exception as e:
