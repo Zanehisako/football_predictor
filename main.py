@@ -61,6 +61,26 @@ async def main():
         officials= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small")
         print("officials:", officials.text_all.strip().split("·"))
 
+        home_team_possession = await page.select("#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
+        print("Home team possession:", home_team_possession.text)
+        away_team_possession = await page.select("#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
+        print("away team possession:", away_team_possession.text)
+
+        home_team_pass_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
+        print("Home team pass_accuracy:", home_team_pass_accuracy.text)
+        away_team_pass_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
+        print("away team pass_accuracy:", away_team_pass_accuracy.text)
+
+        home_team_shot_accuracy= await page.select("#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
+        print("Home team shot_accuracy:", home_team_shot_accuracy.text)
+        away_team_shot_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+        print("away team shot_accuracy:", away_team_shot_accuracy.text)
+
+        home_team_save_accuracy= await page.select("#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
+        print("Home team save_accuracy:", home_team_save_accuracy.text)
+        away_team_save_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
+        print("away team save_accuracy:", away_team_save_accuracy.text)
+
 
         
     except Exception as e:
