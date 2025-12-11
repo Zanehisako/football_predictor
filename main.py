@@ -147,6 +147,61 @@ async def main():
         print("Home team long_balls:", home_team_long_balls.text)
         away_team_long_balls = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
         print("away team long_balls:", away_team_long_balls.text)
+        
+        # Create a pandas DataFrame with all scraped variables
+        df = pd.DataFrame({
+            'home_team_name': [home_team_name.text],
+            'away_team_name': [away_team_name.text],
+            'home_team_score': [home_team_score.text],
+            'away_team_score': [away_team_score.text],
+            'home_team_xg': [home_team_xg.text],
+            'away_team_xg': [away_team_xg.text],
+            'home_team_manager': [home_team_manager.text_all.split(":")[-1]],
+            'away_team_manager': [away_team_manager.text_all.split(":")[-1]],
+            'home_team_captain': [home_team_capatin.text],
+            'away_team_captain': [away_team_capatin.text],
+            'match_time': [match_time.text_all.split()[0]],
+            'attendance': [attendance.text],
+            'venue': [venue.text],
+            'officials': [officials.text_all.strip().split("·")],
+            'home_team_possession': [home_team_possession.text],
+            'away_team_possession': [away_team_possession.text],
+            'home_team_pass_accuracy': [home_team_pass_accuracy.text],
+            'away_team_pass_accuracy': [away_team_pass_accuracy.text],
+            'home_team_shot_accuracy': [home_team_shot_accuracy.text],
+            'away_team_shot_accuracy': [away_team_shot_accuracy.text],
+            'home_team_save_accuracy': [home_team_save_accuracy.text],
+            'away_team_save_accuracy': [away_team_save_accuracy.text],
+            'home_team_cards': [home_team_cards_number],
+            'away_team_cards': [away_team_cards_number],
+            'home_team_fouls': [home_team_fouls.text],
+            'away_team_fouls': [away_team_fouls.text],
+            'home_team_corners': [home_team_corners.text],
+            'away_team_corners': [away_team_corners.text],
+            'home_team_crosses': [home_team_crosses.text],
+            'away_team_crosses': [away_team_crosses.text],
+            'home_team_touches': [home_team_touches.text],
+            'away_team_touches': [away_team_touches.text],
+            'home_team_tackles': [home_team_tackels.text],
+            'away_team_tackles': [away_team_tackels.text],
+            'home_team_interceptions': [home_team_interceptions.text],
+            'away_team_interceptions': [away_team_interceptions.text],
+            'home_team_aerials': [home_team_aerials.text],
+            'away_team_aerials': [away_team_aerials.text],
+            'home_team_clearances': [home_team_clearances.text],
+            'away_team_clearances': [away_team_clearances.text],
+            'home_team_offsides': [home_team_offsides.text],
+            'away_team_offsides': [away_team_offsides.text],
+            'home_team_goal_kicks': [home_team_goal_kicks.text],
+            'away_team_goal_kicks': [away_team_goal_kicks.text],
+            'home_team_throw_ins': [home_team_throw_ins.text],
+            'away_team_throw_ins': [away_team_throw_ins.text],
+            'home_team_long_balls': [home_team_long_balls.text],
+            'away_team_long_balls': [away_team_long_balls.text]
+        })
+        
+        print("DataFrame created successfully!")
+        print(df)
 
 
 
