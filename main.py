@@ -202,6 +202,8 @@ async def main():
         
         print("DataFrame created successfully!")
         print(df)
+        df.to_csv("match_data.csv", index=False)
+        print(".csv file created successfully!")
 
 
 
