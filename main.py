@@ -6,7 +6,7 @@ from io import StringIO
 async def get_page_content(url,browser):
         print("Starting to scrape the page:", url)
         # 1. Get the page
-        page = await browser.get(url)
+        page = await browser.get(url,new_tab=True)
         
         # Wait for the main content to load. A common element on match pages is the box score table.
         # The selector below targets the "Scores & Fixtures" table wrapper.
@@ -144,6 +144,7 @@ async def get_page_content(url,browser):
         away_team_long_balls = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
         #print("away team long_balls:", away_team_long_balls.text)
         print("finished scrapping the page:", url)
+        page.close()
         return {
             'home_team_name': home_team_name.text,
             'away_team_name': away_team_name.text,
@@ -220,6 +221,8 @@ async def scrape_all_club_matches(url,browser):
                     break
                 else:
                      print("match URL found:", href.href)
+                     result = await get_page_content(f"https://fbref.com/{href.href}",browser)
+                     print(result)
                      i+=1
             except Exception as e:
                 print(f"An error occurred while scraping matches: {e}")
@@ -232,7 +235,7 @@ async def main():
     try:
         df = pd.DataFrame()
         club_url = "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats"
-        browser = await zd.start(headless=True)
+        browser = await zd.start(headless=False)
         await scrape_all_club_matches(club_url, browser)
         # urls = ["https://fbref.com/en/matches/d34e407e/Real-Madrid-Osasuna-August-19-2025-La-Liga","https://fbref.com/en/matches/fde70dd0/Oviedo-Real-Madrid-August-24-2025-La-Liga","https://fbref.com/en/matches/9c0a49c5/Real-Madrid-Mallorca-August-30-2025-La-Liga"]
         # for url in urls:
