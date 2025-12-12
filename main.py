@@ -144,7 +144,7 @@ async def get_page_content(url,browser):
         away_team_long_balls = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
         #print("away team long_balls:", away_team_long_balls.text)
         print("finished scrapping the page:", url)
-        page.close()
+        await page.close()
         return {
             'home_team_name': home_team_name.text,
             'away_team_name': away_team_name.text,
