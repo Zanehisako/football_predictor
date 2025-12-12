@@ -10,17 +10,9 @@ async def get_page_content(url,browser):
         
         # Wait for the main content to load. A common element on match pages is the box score table.
         # The selector below targets the "Scores & Fixtures" table wrapper.
-        await page.wait_for('#content', timeout=20000) 
-        await asyncio.sleep(2) # Give it a little extra time to render after dismissal
+        await page.wait_for('#content > div.scorebox', timeout=20000) 
+        await asyncio.sleep(20) # Give it a little extra time to render after dismissal
 
-        #print("Loaded URL:", page.url)
-        # # get HTML content of the page as a string
-        # content = await page.get_content()
-        # # NOTE: Content will now be very long, so avoid #printing the whole thing
-        # #print("Page content length:", len(content)) 
-        # scores= await page.select("#content > div.scorebox")
-        # texts = scores.text_all.split()
-        # #print("Scorebox Texts:", texts)
 
         home_team_name= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
         #print("Home team name:", home_team_name.text)
@@ -196,8 +188,10 @@ async def get_page_content(url,browser):
             'away_team_long_balls': away_team_long_balls.text
         }
         
-async def scrape_all_club_matches(url,browser):
-        print("Starting to scrape all matches for the club:", url)
+async def scrape_all_club_matches_urls(url,browser):
+        print("Starting to scrape all matches urls for the club:", url)
+        urls = []
+
         # 1. Get the page
         page = await browser.get(url)
         
@@ -209,9 +203,6 @@ async def scrape_all_club_matches(url,browser):
         while True:
             try:
                 if i==16:
-                    # href = await page.select(f"#matchlogs_for > tbody > tr.rowSum > td.left.group_start > a")
-                    # href = href.href
-                    # print("match URL found:", href)
                     i+=1
                     continue
 
@@ -221,34 +212,45 @@ async def scrape_all_club_matches(url,browser):
                     break
                 else:
                      print("match URL found:", href.href)
-                     result = await get_page_content(f"https://fbref.com/{href.href}",browser)
-                     print(result)
+                     url = f"https://fbref.com/{href.href}"
+                     urls.append(url)
                      i+=1
             except Exception as e:
                 print(f"An error occurred while scraping matches: {e}")
                 break
         
         print("Finished scrapping all matches for the club:", url)
+        print("Total match URLs found:", len(urls))
+        return urls
+
+async def scrape_all_club_matches(urls,browser):
+        print("Starting to scrape all matches for the club:")
+        
+        results = []
+        for url in urls:
+            try:
+                 result = await get_page_content(url=url, browser=browser)
+                 results.append(result)
+            except Exception as e:
+                print(f"An error occurred while scraping match {url}: {e}")
+                continue
+        
+        df = pd.DataFrame(results)
+        print("DataFrame created successfully!")
+
+        print("Finished scrapping all matches for the club:")
+        return df
 
 async def main():
     browser = None # Initialize to None for the finally block
     try:
-        df = pd.DataFrame()
         club_url = "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats"
-        browser = await zd.start(headless=False)
-        await scrape_all_club_matches(club_url, browser)
-        # urls = ["https://fbref.com/en/matches/d34e407e/Real-Madrid-Osasuna-August-19-2025-La-Liga","https://fbref.com/en/matches/fde70dd0/Oviedo-Real-Madrid-August-24-2025-La-Liga","https://fbref.com/en/matches/9c0a49c5/Real-Madrid-Mallorca-August-30-2025-La-Liga"]
-        # for url in urls:
-        #     result =  await get_page_content(url, browser)
-        #     df = pd.concat([df, pd.DataFrame([result])], ignore_index=True)
-        
-        # print("DataFrame created successfully!")
-        # print(df)
-        # df.to_csv("match_data.csv", index=False)
-        # print(".csv file created successfully!")
-        # print("Browser started.")
-        
-
+        browser = await zd.start(headless=True)
+        urls = await scrape_all_club_matches_urls(club_url, browser)
+        df = await scrape_all_club_matches(urls, browser)
+        print(df)
+        df.to_csv("match_data.csv", index=False)
+        print(".csv file created successfully!")
 
         
     except Exception as e:
