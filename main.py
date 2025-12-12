@@ -231,7 +231,7 @@ async def main():
     browser = None # Initialize to None for the finally block
     try:
         df = pd.DataFrame()
-        club_url = "https://fbref.com/en/squads/18bb7c10/Real-Madrid-Stats"
+        club_url = "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats"
         browser = await zd.start(headless=True)
         await scrape_all_club_matches(club_url, browser)
         # urls = ["https://fbref.com/en/matches/d34e407e/Real-Madrid-Osasuna-August-19-2025-La-Liga","https://fbref.com/en/matches/fde70dd0/Oviedo-Real-Madrid-August-24-2025-La-Liga","https://fbref.com/en/matches/9c0a49c5/Real-Madrid-Mallorca-August-30-2025-La-Liga"]
