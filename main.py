@@ -174,7 +174,7 @@ async def scrape_all_club_matches(urls, page):
 async def main():
     browser = None
     try:
-        club_url = "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats"
+        club_urls = ["https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats","https://fbref.com/en/squads/206d90db/Barcelona-Stats"]
         browser = await zd.start(headless=False)
         
         # Open the first tab (or use the default one)
@@ -182,8 +182,11 @@ async def main():
         page = await browser.get("about:blank")
         
         # Pass this single 'page' object to all functions
-        urls = await scrape_all_club_matches_urls(club_url, page)
-        
+        urls = []
+        for url in club_urls:
+            result = await scrape_all_club_matches_urls(url, page)
+            urls.extend(result)
+
         if urls:
             df = await scrape_all_club_matches(urls, page)
             print(df)
