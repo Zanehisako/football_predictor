@@ -1,264 +1,200 @@
 import asyncio
 import zendriver as zd
 import pandas as pd
-from io import StringIO
+import random
 
-async def get_page_content(url,browser):
-        print("Starting to scrape the page:", url)
-        # 1. Get the page
-        page = await browser.get(url,new_tab=True)
-        
-        # Wait for the main content to load. A common element on match pages is the box score table.
-        # The selector below targets the "Scores & Fixtures" table wrapper.
-        await page.wait_for('#content > div.scorebox', timeout=20000) 
-        await asyncio.sleep(20) # Give it a little extra time to render after dismissal
+# --- Helper Function for Safe Extraction ---
+async def safe_get(page, selector, attribute='text', timeout=2):
+    """Safely gets an attribute from an element, returning None on failure."""
+    try:
+        element = await page.select(selector, timeout=timeout)
+        if not element:
+            return None
+            
+        if attribute == 'text':
+            return element.text
+        elif attribute == 'text_all':
+            return element.text_all
+        elif attribute == 'child_count':
+            return element.child_node_count
+        else:
+            return element # Return the element itself if needed
+    except Exception:
+        return None
 
-
-        home_team_name= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
-        #print("Home team name:", home_team_name.text)
-        away_team_name= await page.select("#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
-        #print("away team name:", away_team_name.text)
-        home_team_score= await page.select("#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
-        #print("Home team score:", home_team_score.text)
-        away_team_score= await page.select("#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
-        #print("away team score:", away_team_score.text)
-        home_team_xg= await page.select("#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
-        #print("Home team XG:", home_team_xg.text)
-        away_team_xg= await page.select("#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
-        #print("away team XG:", away_team_xg.text)
-
-        home_team_manager= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(5)")
-        #print("Home team manager:", home_team_manager.text_all.split(":")[-1])
-        away_team_manager= await page.select("#content > div.scorebox > div:nth-child(2) > div:nth-child(5)")
-        #print("away team manager:", away_team_manager.text_all.split(":")[-1])
-
-        home_team_capatin= await page.select("#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
-        #print("Home team capatin:", home_team_capatin.text)
-        away_team_capatin= await page.select("#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
-        #print("away team capatin:", away_team_capatin.text)
-
-        match_time= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime")
-        #print("match time:", match_time.text_all.split()[0])
-
-        attendance= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
-        #print("attendance:", attendance.text)
-
-        venue= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
-        #print("venue:", venue.text)
-
-        officials= await page.select("#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small")
-        #print("officials:", officials.text_all.strip().split("·"))
-
-        home_team_possession = await page.select("#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
-        #print("Home team possession:", home_team_possession.text)
-        away_team_possession = await page.select("#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
-        #print("away team possession:", away_team_possession.text)
-
-        home_team_pass_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
-        #print("Home team pass_accuracy:", home_team_pass_accuracy.text)
-        away_team_pass_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
-        #print("away team pass_accuracy:", away_team_pass_accuracy.text)
-
-        home_team_shot_accuracy= await page.select("#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
-        #print("Home team shot_accuracy:", home_team_shot_accuracy.text)
-        away_team_shot_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
-        #print("away team shot_accuracy:", away_team_shot_accuracy.text)
-
-        home_team_save_accuracy= await page.select("#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
-        #print("Home team save_accuracy:", home_team_save_accuracy.text)
-        away_team_save_accuracy = await page.select("#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
-        #print("away team save_accuracy:", away_team_save_accuracy.text)
-
-        home_team_cards= await page.select("#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div")
-        home_team_cards_number =  home_team_cards.child_node_count
-        #print("Home team cards:", home_team_cards_number)
-        away_team_cards = await page.select("#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div")
-        away_team_cards_number =  away_team_cards.child_node_count
-        #print("away team cards:", away_team_cards_number)
-
-        home_team_fouls= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
-        #print("Home team fouls:", home_team_fouls.text)
-        away_team_fouls = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
-        #print("away team fouls:", away_team_fouls.text)
-
-        home_team_corners= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
-        #print("Home team corners:", home_team_corners.text)
-        away_team_corners = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
-        #print("away team corners:", away_team_corners.text)
-
-        home_team_crosses= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
-        #print("Home team crosses:", home_team_crosses.text)
-        away_team_crosses = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
-        #print("away team crosses:", away_team_crosses.text)
-
-        home_team_touches= await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
-        #print("Home team touches:", home_team_touches.text)
-        away_team_touches = await page.select("#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
-        #print("away team touches:", away_team_touches.text)
-
-        home_team_tackels= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
-        #print("Home team tackels:", home_team_tackels.text)
-        away_team_tackels = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
-        #print("away team tackels:", away_team_tackels.text)
-
-        home_team_interceptions= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
-        #print("Home team interceptions:", home_team_interceptions.text)
-        away_team_interceptions = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
-        #print("away team interceptions:", away_team_interceptions.text)
-
-        home_team_aerials= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
-        #print("Home team aerials:", home_team_aerials.text)
-        away_team_aerials = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
-        #print("away team aerials:", away_team_aerials.text)
-
-        home_team_clearances= await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
-        #print("Home team clearances:", home_team_clearances.text)
-        away_team_clearances = await page.select("#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
-        #print("away team clearances:", away_team_clearances.text)
-
-        home_team_offsides= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
-        #print("Home team offsides:", home_team_offsides.text)
-        away_team_offsides = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
-        #print("away team offsides:", away_team_offsides.text)
-
-        home_team_goal_kicks= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
-        #print("Home team goal_kicks:", home_team_goal_kicks.text)
-        away_team_goal_kicks = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
-        #print("away team goal_kicks:", away_team_goal_kicks.text)
-
-        home_team_throw_ins= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
-        #print("Home team throw_ins:", home_team_throw_ins.text)
-        away_team_throw_ins = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
-        #print("away team throw_ins:", away_team_throw_ins.text)
-
-        home_team_long_balls= await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
-        #print("Home team long_balls:", home_team_long_balls.text)
-        away_team_long_balls = await page.select("#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
-        #print("away team long_balls:", away_team_long_balls.text)
-        print("finished scrapping the page:", url)
-        await page.close()
-        return {
-            'home_team_name': home_team_name.text,
-            'away_team_name': away_team_name.text,
-            'home_team_score': home_team_score.text,
-            'away_team_score': away_team_score.text,
-            'home_team_xg': home_team_xg.text,
-            'away_team_xg': away_team_xg.text,
-            'home_team_manager': home_team_manager.text_all.split(":")[-1],
-            'away_team_manager': away_team_manager.text_all.split(":")[-1],
-            'home_team_captain': home_team_capatin.text,
-            'away_team_captain': away_team_capatin.text,
-            'match_time': match_time.text_all.split()[0],
-            'attendance': attendance.text,
-            'venue': venue.text,
-            'officials': officials.text_all,
-            'home_team_possession': home_team_possession.text,
-            'away_team_possession': away_team_possession.text,
-            'home_team_pass_accuracy': home_team_pass_accuracy.text,
-            'away_team_pass_accuracy': away_team_pass_accuracy.text,
-            'home_team_shot_accuracy': home_team_shot_accuracy.text,
-            'away_team_shot_accuracy': away_team_shot_accuracy.text,
-            'home_team_save_accuracy': home_team_save_accuracy.text,
-            'away_team_save_accuracy': away_team_save_accuracy.text,
-            'home_team_cards_number': home_team_cards_number,
-            'away_team_cards_number': away_team_cards_number,
-            'home_team_fouls': home_team_fouls.text,
-            'away_team_fouls': away_team_fouls.text,
-            'home_team_corners': home_team_corners.text,
-            'away_team_corners': away_team_corners.text,
-            'home_team_crosses': home_team_crosses.text,
-            'away_team_crosses': away_team_crosses.text,
-            'home_team_touches': home_team_touches.text,
-            'away_team_touches': away_team_touches.text,
-            'home_team_tackels': home_team_tackels.text,
-            'away_team_tackels': away_team_tackels.text,
-            'home_team_interceptions': home_team_interceptions.text,
-            'away_team_interceptions': away_team_interceptions.text,
-            'home_team_aerials': home_team_aerials.text,
-            'away_team_aerials': away_team_aerials.text,
-            'home_team_clearances': home_team_clearances.text,
-            'away_team_clearances': away_team_clearances.text,
-            'home_team_offsides': home_team_offsides.text,
-            'away_team_offsides': away_team_offsides.text,
-            'home_team_goal_kicks': home_team_goal_kicks.text,
-            'away_team_goal_kicks': away_team_goal_kicks.text,
-            'home_team_throw_ins': home_team_throw_ins.text,
-            'away_team_throw_ins': away_team_throw_ins.text,
-            'home_team_long_balls': home_team_long_balls.text,
-            'away_team_long_balls': away_team_long_balls.text
-        }
-        
-async def scrape_all_club_matches_urls(url,browser):
-        print("Starting to scrape all matches urls for the club:", url)
-        urls = []
-
-        # 1. Get the page
-        page = await browser.get(url)
-        
-        # Wait for the main content to load. A common element on match pages is the matches table.
-        await page.wait_for('#content', timeout=20000) 
-        await asyncio.sleep(2) # Give it a little extra time to render after dismissal
-
-        i=1
-        while True:
+async def get_page_content(url, page):
+    print(f"Starting to scrape: {url}")
+    
+    # Retry configuration
+    max_retries = 3
+    
+    for attempt in range(1, max_retries + 1):
+        try:
+            # 1. Navigate
+            await page.get(url)
+            
+            # 2. Smart Wait Strategy
+            # We try to wait for "complete", but we don't let a timeout stop us.
             try:
-                if i==16:
-                    i+=1
-                    continue
+                await page.wait_for_ready_state("complete", timeout=15)
+            except Exception:
+                # If "complete" times out (e.g. ads still loading), just print a warning 
+                # and check if the content we actually need is there.
+                print(f"   (Warning: 'complete' state timed out on attempt {attempt}, checking for content...)")
 
-                href = await page.select(f"#matchlogs_for > tbody > tr:nth-child({i}) > td.left.group_start > a")
+            # 3. The "Real" Check
+            # We only care if the scorebox exists. If this passes, the page is good.
+            await page.wait_for('#content > div.scorebox', timeout=10)
+            
+            # --- If we get here, the page is loaded enough to scrape! ---
+            
+            # Extract Data (using the safe_get helper you already have)
+            home_team_name = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
+            away_team_name = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
+            
+            home_team_score = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
+            away_team_score = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
+            
+            home_team_xg = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
+            away_team_xg = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
 
-                if href.text != "Match Report":
-                    break
-                else:
-                     print("match URL found:", href.href)
-                     url = f"https://fbref.com/{href.href}"
-                     urls.append(url)
-                     i+=1
-            except Exception as e:
-                print(f"An error occurred while scraping matches: {e}")
-                break
-        
-        print("Finished scrapping all matches for the club:", url)
-        print("Total match URLs found:", len(urls))
-        return urls
+            # Managers
+            h_mgr_full = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(5)", 'text_all')
+            a_mgr_full = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(5)", 'text_all')
+            home_team_manager = h_mgr_full.split(":")[-1].strip() if h_mgr_full else None
+            away_team_manager = a_mgr_full.split(":")[-1].strip() if a_mgr_full else None
 
-async def scrape_all_club_matches(urls,browser):
-        print("Starting to scrape all matches for the club:")
-        
-        results = []
-        for url in urls:
-            try:
-                 result = await get_page_content(url=url, browser=browser)
-                 results.append(result)
-            except Exception as e:
-                print(f"An error occurred while scraping match {url}: {e}")
-                continue
-        
-        df = pd.DataFrame(results)
-        print("DataFrame created successfully!")
+            home_team_captain = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
+            away_team_captain = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
 
-        print("Finished scrapping all matches for the club:")
-        return df
+            match_time_full = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime", 'text_all')
+            match_time = match_time_full.split()[0] if match_time_full else None
+
+            attendance = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
+            venue = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
+            officials = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small", 'text_all')
+
+            home_team_possession = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            away_team_possession = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
+
+            home_team_cards = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div", 'child_count')
+            away_team_cards = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div", 'child_count')
+
+            print(f"   Success on attempt {attempt}")
+            return {
+                'home_team_name': home_team_name,
+                'away_team_name': away_team_name,
+                'home_team_score': home_team_score,
+                'away_team_score': away_team_score,
+                'home_team_xg': home_team_xg,
+                'away_team_xg': away_team_xg,
+                'home_team_manager': home_team_manager,
+                'away_team_manager': away_team_manager,
+                'home_team_captain': home_team_captain,
+                'away_team_captain': away_team_captain,
+                'match_time': match_time,
+                'attendance': attendance,
+                'venue': venue,
+                'officials': officials,
+                'home_team_possession': home_team_possession,
+                'away_team_possession': away_team_possession,
+                'home_team_cards_number': home_team_cards,
+                'away_team_cards_number': away_team_cards,
+            }
+
+        except Exception as e:
+            print(f"   Attempt {attempt} failed: {e}")
+            if attempt < max_retries:
+                print("   Retrying...")
+                await asyncio.sleep(3) # Wait before retrying
+            else:
+                print(f"   Skipping match {url} after {max_retries} failed attempts.")
+                return None
+
+async def scrape_all_club_matches_urls(url, page):
+    print("Starting to scrape all matches urls for the club:", url)
+    urls = []
+
+    # Navigate using the existing page
+    await page.get(url)
+    await page.wait_for('#content', timeout=20) 
+    await asyncio.sleep(2)
+
+    # Improved loop to avoid the Timeout error you saw earlier
+    i = 1
+    # Check up to 60 rows to be safe
+    for i in range(1, 60):
+        if i == 16: # Skip divider
+            continue
+
+        try:
+            # Use a short timeout here. If element isn't found quickly, we are likely at the end.
+            selector = f"#matchlogs_for > tbody > tr:nth-child({i}) > td.left.group_start > a"
+            href = await page.select(selector, timeout=1)
+            
+            if not href:
+                break # End of table
+                
+            if href.text != "Match Report":
+                break # Reached rows that aren't matches
+            else:
+                match_url = f"https://fbref.com{href.get('href')}"
+                print("match URL found:", match_url)
+                urls.append(match_url)
+        except Exception:
+            # If selection fails, we assume we reached the end of the table
+            break
+            
+    print("Total match URLs found:", len(urls))
+    return urls
+
+async def scrape_all_club_matches(urls, page):
+    print("Starting to scrape all matches for the club:")
+    
+    results = []
+    for i, url in enumerate(urls):
+        print(f"\nProcessing {i+1}/{len(urls)}")
+        try:
+            # Pass the SAME page object to the function
+            match_data = await get_page_content(url, page)
+            if match_data:
+                results.append(match_data)
+            
+            # Small random sleep to be polite and avoid blocks
+            await asyncio.sleep(random.uniform(2, 5))
+            
+        except Exception as e:
+            print(f"An error occurred while scraping match {url}: {e}")
+            continue
+
+    df = pd.DataFrame(results)
+    print("DataFrame created successfully!")
+    return df
 
 async def main():
-    browser = None # Initialize to None for the finally block
+    browser = None
     try:
         club_url = "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats"
-        browser = await zd.start(headless=True)
-        urls = await scrape_all_club_matches_urls(club_url, browser)
-        df = await scrape_all_club_matches(urls, browser)
-        print(df)
-        df.to_csv("match_data.csv", index=False)
-        print(".csv file created successfully!")
-
+        browser = await zd.start(headless=False)
+        
+        # Open the first tab (or use the default one)
+        # In zendriver, browser.get() returns the first tab if new_tab=False
+        page = await browser.get("about:blank")
+        
+        # Pass this single 'page' object to all functions
+        urls = await scrape_all_club_matches_urls(club_url, page)
+        
+        if urls:
+            df = await scrape_all_club_matches(urls, page)
+            print(df)
+            df.to_csv("match_data.csv", index=False)
+            print(".csv file created successfully!")
         
     except Exception as e:
         print(f"An error occurred during execution: {e}")
 
     finally:
         if browser:
-            # Explicitly close the browser before exiting the main function
             await browser.stop() 
             print("Browser Stopped.")
 
