@@ -3,6 +3,7 @@ import zendriver as zd
 import pandas as pd
 import random
 import os
+import zendriver.cdp.network as network # Import the network module
 
 # --- Helper Function for Safe Extraction ---
 async def safe_get(page, selector, attribute='text', timeout=1):
@@ -261,6 +262,23 @@ async def main():
         
         browser = await zd.start(headless=True)
         page = await browser.get("about:blank")
+
+        # --- OPTIMIZATION: ENABLE NETWORK BLOCKING ---
+        # 1. Enable network tracking
+        await page.send(network.enable())
+        
+        # 2. Block heavy resources
+        # Note the function name is 'set_blocked_ur_ls' not 'set_blocked_urls'
+        await page.send(network.set_blocked_ur_ls(urls=[
+            "*.png", "*.jpg", "*.jpeg", "*.gif", "*.svg", "*.webp", # Images
+            "*.css",                                                # Styles (layouts)
+            "*.woff", "*.woff2",                                    # Fonts
+            "*doubleclick*", "*google-analytics*",                  # Ads/Tracking
+            "*googlesyndication*", "*adservice*",
+            "*facebook*", "*twitter*", "*youtube*"
+        ]))
+        print(f"   [Worker] Network blocking enabled (No images/ads)")
+        # ---------------------------------------------
         
         # 2. Collect ALL potential URLs
         all_found_urls = []
