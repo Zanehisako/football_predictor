@@ -54,17 +54,23 @@ async def get_page_content(url, page):
 
             "#sb_team_0 > div:nth-child(5) > a"
             "#sb_team_0 > div:nth-child(6) > a"
-            home_captin = await page.find("Captain",best_match=True)
-            print(f"home_captin{home_captin}")
-            # Get the parent element  
-            parent = home_captin.parent  
-            home_team_capatin= await parent.query_selector("a")  
-            if home_team_capatin:  
-                player_name = home_team_capatin.text  
-                print(player_name)  # Output: "Federico Valverde"
-
-            away_team_capatin= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
-            #print("away team capatin:", away_team_capatin.text)
+            captins= await page.find_all("Captain")
+            for i,captin in enumerate(captins):
+                match i:
+                    case 0:
+                        print(f"home_captin{captin}")
+                        # Get the parent element  
+                        parent = captin.parent  
+                        home_team_capatin= await parent.query_selector("a")  
+                        if home_team_capatin:
+                            print(f"home team cap:{home_team_capatin.text}")
+                    case 1:
+                        print(f"away_captin{captin}")
+                        # Get the parent element  
+                        parent = captin.parent  
+                        away_team_capatin= await parent.query_selector("a")  
+                        if away_team_capatin:
+                            print(f"away team cap:{away_team_capatin.text}")
 
             match_time= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.venuetime")
             #print("match time:", match_time.text_all.split()[0])
@@ -88,9 +94,37 @@ async def get_page_content(url, page):
             away_team_pass_accuracy = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
             #print("away team pass_accuracy:", away_team_pass_accuracy.text)
 
-            home_team_shot_accuracy= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            #print("Home team shot_accuracy:", home_team_shot_accuracy.text)
-            away_team_shot_accuracy = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            #Just to find the fucking shots bruv!
+            home_team_all_shots= await page.find("Shots on Target")
+            print(f"home_team_all_shots:{home_team_all_shots}")
+            parent = home_team_all_shots.parent  
+            grandpa = parent.parent
+            # Get all children and filter to only element nodes (skip text nodes)  
+            grandpa_children = [child for child in grandpa.children ]  
+            # print("element children",grandpa_children)
+            parent_shots_index= grandpa_children.index(parent)  
+            # print(f"shots index:{parent_shots_index}")
+            shots_parent = grandpa_children[parent_shots_index+1]
+            print(f"shots parent:{shots_parent}")
+            parent_children= [child for child in shots_parent.children ]  
+
+            home_shots = parent_children[0].children[0].children[0].text.split()
+            home_shots_onTarget= home_shots[0]
+            home_total_shots = home_shots[2]
+            away_shots = parent_children[1].children[0].children[0].text_all.split()
+            away_shots_onTarget= away_shots[2]
+            away_total_shots = away_shots[-1]
+            print(f"home shots on Target:{home_shots_onTarget}")
+            print(f"home all shots:{home_total_shots}")
+            print(f"away shots on Target:{away_shots_onTarget}")
+            print(f"away all shots:{away_total_shots}")
+            # print(f"all shots:{home_team_all_shots.text}")
+            # home_team_all_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            # home_team_missed_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            # #print("Home team shot_accuracy:", home_team_shot_accuracy.text)
+            # away_team_all_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            # away_team_missed_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+
             #print("away team shot_accuracy:", away_team_shot_accuracy.text)
 
             home_team_save_accuracy= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
@@ -184,8 +218,8 @@ async def get_page_content(url, page):
                 'away_team_possession': away_team_possession.text,
                 'home_team_pass_accuracy': home_team_pass_accuracy.text,
                 'away_team_pass_accuracy': away_team_pass_accuracy.text,
-                'home_team_shot_accuracy': home_team_shot_accuracy.text,
-                'away_team_shot_accuracy': away_team_shot_accuracy.text,
+                # 'home_team_shot_accuracy': home_team_shot_accuracy.text,
+                # 'away_team_shot_accuracy': away_team_shot_accuracy.text,
                 'home_team_save_accuracy': home_team_save_accuracy.text,
                 'away_team_save_accuracy': away_team_save_accuracy.text,
                 'home_team_cards_number': home_team_cards_number,
