@@ -94,6 +94,31 @@ async def get_page_content(url, page):
             away_team_pass_accuracy = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
             #print("away team pass_accuracy:", away_team_pass_accuracy.text)
 
+            #Just to find the fucking passing bruv!
+            home_team_all_passing= await page.find("Passing Accuracy")
+            print(f"home_team_all_passing:{home_team_all_passing}")
+            parent = home_team_all_passing.parent  
+            grandpa = parent.parent
+            # Get all children and filter to only element nodes (skip text nodes)  
+            grandpa_children = [child for child in grandpa.children ]  
+            # print("element children",grandpa_children)
+            parent_passing_index= grandpa_children.index(parent)  
+            # print(f"passing index:{parent_passing_index}")
+            passing_parent = grandpa_children[parent_passing_index+1]
+            print(f"passing parent:{passing_parent}")
+            parent_children= [child for child in passing_parent.children ]  
+
+            home_passing = parent_children[0].children[0].children[0].text.split()
+            home_passing_onTarget= home_passing[0]
+            home_total_passing = home_passing[2]
+            away_passing = parent_children[1].children[0].children[0].text_all.split()
+            away_passing_onTarget= away_passing[2]
+            away_total_passing = away_passing[-1]
+            print(f"home passing on Target:{home_passing_onTarget}")
+            print(f"home all passing:{home_total_passing}")
+            print(f"away passing on Target:{away_passing_onTarget}")
+            print(f"away passing passing:{away_total_passing}")
+
             #Just to find the fucking shots bruv!
             home_team_all_shots= await page.find("Shots on Target")
             print(f"home_team_all_shots:{home_team_all_shots}")
