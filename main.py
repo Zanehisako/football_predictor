@@ -143,12 +143,31 @@ async def get_page_content(url, page):
             print(f"home all shots:{home_total_shots}")
             print(f"away shots on Target:{away_shots_onTarget}")
             print(f"away all shots:{away_total_shots}")
-            # print(f"all shots:{home_team_all_shots.text}")
-            # home_team_all_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            # home_team_missed_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            # #print("Home team shot_accuracy:", home_team_shot_accuracy.text)
-            # away_team_all_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
-            # away_team_missed_shots= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+
+            #Just to find the fucking saves bruv!
+            home_team_all_saves= await page.find("Saves")
+            print(f"home_team_all_saves:{home_team_all_saves}")
+            parent = home_team_all_saves.parent  
+            grandpa = parent.parent
+            # Get all children and filter to only element nodes (skip text nodes)  
+            grandpa_children = [child for child in grandpa.children ]  
+            # print("element children",grandpa_children)
+            parent_saves_index= grandpa_children.index(parent)  
+            # print(f"saves index:{parent_saves_index}")
+            saves_parent = grandpa_children[parent_saves_index+1]
+            print(f"saves parent:{saves_parent}")
+            parent_children= [child for child in saves_parent.children ]  
+
+            home_saves = parent_children[0].children[0].children[0].text.split()
+            home_saves_onTarget= home_saves[0]
+            home_total_saves = home_saves[2]
+            away_saves = parent_children[1].children[0].children[0].text_all.split()
+            away_saves_onTarget= away_saves[2]
+            away_total_saves = away_saves[-1]
+            print(f"home saves on Target:{home_saves_onTarget}")
+            print(f"home all saves:{home_total_saves}")
+            print(f"away saves on Target:{away_saves_onTarget}")
+            print(f"away all saves:{away_total_saves}")
 
             #print("away team shot_accuracy:", away_team_shot_accuracy.text)
 
