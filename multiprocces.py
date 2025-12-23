@@ -8,7 +8,7 @@ from concurrent.futures import ProcessPoolExecutor
 
 # --- 1. SHARED HELPER FUNCTIONS ---
 
-async def safe_get(page, selector, attribute='text', timeout=2):
+async def safe_get(page,page, selector, attribute='text', timeout=2):
     """Safely gets an attribute from an element."""
     try:
         element = await page.select(selector, timeout=timeout)
@@ -50,82 +50,82 @@ async def get_page_content(url, page):
             # --- YOUR DETAILED EXTRACTION LOGIC ---
             
             # Basic Info
-            home_team_name = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
-            away_team_name = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
-            home_team_score = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
-            away_team_score = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
-            home_team_xg = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
-            away_team_xg = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
+            home_team_name = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
+            away_team_name = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
+            home_team_score = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
+            away_team_score = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
+            home_team_xg = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
+            away_team_xg = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
 
             # Managers
-            h_mgr_full = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(5)", 'text_all')
-            a_mgr_full = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(5)", 'text_all')
+            h_mgr_full = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(5)", 'text_all')
+            a_mgr_full = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(5)", 'text_all')
             home_team_manager = h_mgr_full.split(":")[-1].strip() if h_mgr_full else None
             away_team_manager = a_mgr_full.split(":")[-1].strip() if a_mgr_full else None
 
             # Captains
-            home_team_captain = await safe_get(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
-            away_team_captain = await safe_get(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
+            home_team_captain = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
+            away_team_captain = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
 
             # Meta Data
-            match_time_full = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime", 'text_all')
+            match_time_full = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime", 'text_all')
             match_time = match_time_full.split()[0] if match_time_full else None
-            attendance = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
-            venue = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
-            officials = await safe_get(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small", 'text_all')
+            attendance = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
+            venue = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
+            officials = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small", 'text_all')
 
             # --- TEAM STATS TABLE ---
-            home_team_possession = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            away_team_possession = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            home_team_possession = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            away_team_possession = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
 
-            home_team_pass_accuracy = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            away_team_pass_accuracy = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            home_team_pass_accuracy = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            away_team_pass_accuracy = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
 
-            home_team_shot_accuracy = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            away_team_shot_accuracy = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            home_team_shot_accuracy = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            away_team_shot_accuracy = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
 
-            home_team_save_accuracy = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            away_team_save_accuracy = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            home_team_save_accuracy = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            away_team_save_accuracy = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
 
-            home_team_cards_number = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div", 'child_count')
-            away_team_cards_number = await safe_get(page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div", 'child_count')
+            home_team_cards_number = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div", 'child_count')
+            away_team_cards_number = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div", 'child_count')
 
             # --- EXTRA STATS (Fouls, Corners, etc) ---
-            home_team_fouls = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
-            away_team_fouls = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
+            home_team_fouls = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
+            away_team_fouls = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
 
-            home_team_corners = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
-            away_team_corners = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
+            home_team_corners = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
+            away_team_corners = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
 
-            home_team_crosses = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
-            away_team_crosses = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
+            home_team_crosses = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
+            away_team_crosses = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
 
-            home_team_touches = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
-            away_team_touches = await safe_get(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
+            home_team_touches = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
+            away_team_touches = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
 
-            home_team_tackels = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
-            away_team_tackels = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
+            home_team_tackels = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
+            away_team_tackels = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
 
-            home_team_interceptions = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
-            away_team_interceptions = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
+            home_team_interceptions = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
+            away_team_interceptions = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
 
-            home_team_aerials = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
-            away_team_aerials = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
+            home_team_aerials = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
+            away_team_aerials = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
 
-            home_team_clearances = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
-            away_team_clearances = await safe_get(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
+            home_team_clearances = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
+            away_team_clearances = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
 
-            home_team_offsides = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
-            away_team_offsides = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
+            home_team_offsides = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
+            away_team_offsides = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
 
-            home_team_goal_kicks = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
-            away_team_goal_kicks = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
+            home_team_goal_kicks = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
+            away_team_goal_kicks = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
 
-            home_team_throw_ins = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
-            away_team_throw_ins = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
+            home_team_throw_ins = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
+            away_team_throw_ins = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
 
-            home_team_long_balls = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
-            away_team_long_balls = await safe_get(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
+            home_team_long_balls = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
+            away_team_long_balls = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
 
             return {
                 'match_url': url,
