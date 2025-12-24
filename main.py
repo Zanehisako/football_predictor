@@ -179,8 +179,8 @@ async def get_page_content(url, page):
     parent_children= [child for child in cards_parent.children ]  
 
     print("cards parent_children:",parent_children)
-    home_cards = parent_children[0].children[0].children[0].children[0].child_count
-    away_cards = parent_children[0].children[0].children[0].children[0].child_count
+    home_cards = parent_children[0].children[0].children[0].children[0].child_node_count 
+    away_cards = parent_children[0].children[0].children[0].children[0].child_node_count 
     print(f"home cards:{home_cards}")
     print(f"away cards:{away_cards}")
 
