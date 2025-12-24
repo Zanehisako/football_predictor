@@ -89,14 +89,8 @@ async def get_page_content(url, page):
             away_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
             #print("away team possession:", away_team_possession.text)
 
-            home_team_pass_accuracy = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            #print("Home team pass_accuracy:", home_team_pass_accuracy.text)
-            away_team_pass_accuracy = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
-            #print("away team pass_accuracy:", away_team_pass_accuracy.text)
-
             #Just to find the fucking passing bruv!
             home_team_all_passing= await page.find("Passing Accuracy")
-            print(f"home_team_all_passing:{home_team_all_passing}")
             parent = home_team_all_passing.parent  
             grandpa = parent.parent
             # Get all children and filter to only element nodes (skip text nodes)  
@@ -121,7 +115,6 @@ async def get_page_content(url, page):
 
             #Just to find the fucking shots bruv!
             home_team_all_shots= await page.find("Shots on Target")
-            print(f"home_team_all_shots:{home_team_all_shots}")
             parent = home_team_all_shots.parent  
             grandpa = parent.parent
             # Get all children and filter to only element nodes (skip text nodes)  
@@ -146,7 +139,6 @@ async def get_page_content(url, page):
 
             #Just to find the fucking saves bruv!
             home_team_all_saves= await page.find("Saves")
-            print(f"home_team_all_saves:{home_team_all_saves}")
             parent = home_team_all_saves.parent  
             grandpa = parent.parent
             # Get all children and filter to only element nodes (skip text nodes)  
@@ -155,7 +147,6 @@ async def get_page_content(url, page):
             parent_saves_index= grandpa_children.index(parent)  
             # print(f"saves index:{parent_saves_index}")
             saves_parent = grandpa_children[parent_saves_index+1]
-            print(f"saves parent:{saves_parent}")
             parent_children= [child for child in saves_parent.children ]  
 
             home_saves = parent_children[0].children[0].children[0].text.split()
@@ -169,12 +160,6 @@ async def get_page_content(url, page):
             print(f"away saves on Target:{away_saves_onTarget}")
             print(f"away all saves:{away_total_saves}")
 
-            #print("away team shot_accuracy:", away_team_shot_accuracy.text)
-
-            home_team_save_accuracy= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            #print("Home team save_accuracy:", home_team_save_accuracy.text)
-            away_team_save_accuracy = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
-            #print("away team save_accuracy:", away_team_save_accuracy.text)
 
             home_team_cards= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div")
             home_team_cards_number =  home_team_cards.child_node_count
@@ -260,12 +245,18 @@ async def get_page_content(url, page):
                 'officials': officials.text_all,
                 'home_team_possession': home_team_possession.text,
                 'away_team_possession': away_team_possession.text,
-                'home_team_pass_accuracy': home_team_pass_accuracy.text,
-                'away_team_pass_accuracy': away_team_pass_accuracy.text,
-                # 'home_team_shot_accuracy': home_team_shot_accuracy.text,
-                # 'away_team_shot_accuracy': away_team_shot_accuracy.text,
-                'home_team_save_accuracy': home_team_save_accuracy.text,
-                'away_team_save_accuracy': away_team_save_accuracy.text,
+                'home_passing_onTarget': home_passing_onTarget,
+                'home_total_passing': home_total_passing,
+                'away_passing_onTarget': away_passing_onTarget,
+                'away_total_passing': away_total_passing,
+                'home_shots_onTarget': home_shots_onTarget,
+                'home_total_shots': home_total_shots,
+                'away_shots_onTarget': away_shots_onTarget,
+                'away_total_shots': away_total_shots,
+                'home_saves_onTarget': home_saves_onTarget,
+                'home_total_saves': home_total_saves,
+                'away_saves_onTarget': away_saves_onTarget,
+                'away_total_saves': away_total_saves,
                 'home_team_cards_number': home_team_cards_number,
                 'away_team_cards_number': away_team_cards_number,
                 'home_team_fouls': home_team_fouls.text,
