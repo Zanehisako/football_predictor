@@ -47,51 +47,6 @@ async def get_page_content(url, page):
     away_team_xg= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
     #print("away team XG:", away_team_xg.text)
 
-    # Find all strong elements with "Manager" text  
-    manager_strongs = await page.select_all("strong")  
-    manager_elements = [elem for elem in manager_strongs  if "Manager" in elem.text]  
-    
-    for i, manager in enumerate(manager_elements):  
-        match i:
-            case 0:
-                manager_info= manager.parent.text_all.split()
-                home_team_manager= manager_info[-2] + " " + manager_info[-1]
-                print(f"manager:{home_team_manager}")
-            case 1:
-                manager_info= manager.parent.text_all.split()
-                away_team_manager = manager_info[-2] + " " + manager_info[-1]
-                print(f"manager:{away_team_manager}")
-
-    captins= await page.find_all("Captain")
-    for i,captin in enumerate(captins):
-        match i:
-            case 0:
-                # print(f"home_captin{captin}")
-                # Get the parent element  
-                parent = captin.parent  
-                home_team_capatin= await parent.query_selector("a")  
-                # if home_team_capatin:
-                #      print(f"home team cap:{home_team_capatin.text}")
-            case 1:
-                # print(f"away_captin{captin}")
-                # Get the parent element  
-                parent = captin.parent  
-                away_team_capatin= await parent.query_selector("a")  
-                # if away_team_capatin:
-                #     print(f"away team cap:{away_team_capatin.text}")
-
-    match_time= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.venuetime")
-    #print("match time:", match_time.text_all.split()[0])
-
-    attendance= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
-    #print("attendance:", attendance.text)
-
-    venue= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
-    #print("venue:", venue.text)
-
-    officials= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small")
-    #print("officials:", officials.text_all.strip().split("·"))
-
     home_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
     #print("Home team possession:", home_team_possession.text)
     away_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
@@ -442,14 +397,6 @@ async def get_page_content(url, page):
         'home_team_xg': home_team_xg.text if home_team_xg != None else ((float(home_shots_onTarget)*0.30)+((float(home_total_shots)-float(home_shots_onTarget))*0.05)) ,
         'away_team_xg': away_team_xg.text if away_team_xg != None else ((float(away_shots_onTarget)*0.30)+((float(away_total_shots)-float(away_shots_onTarget))*0.05)),
         'xg_is_estimated':False if home_team_xg else True,
-        'home_team_manager': home_team_manager,
-        'away_team_manager': away_team_manager,
-        'home_team_captain': home_team_capatin.text,
-        'away_team_captain': away_team_capatin.text,
-        'match_time': match_time.text_all.split()[0],
-        # 'attendance': attendance.text,
-        # 'venue': venue.text,
-        'officials': officials.text_all,
         'home_team_possession': home_team_possession.text,
         'away_team_possession': away_team_possession.text,
         'home_passing_onTarget': home_passing_onTarget if passing_accuracy!= None else np.nan,
