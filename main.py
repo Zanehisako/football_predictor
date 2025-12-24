@@ -178,71 +178,180 @@ async def get_page_content(url, page):
     cards_parent = grandpa_children[parent_cards_index+1]
     parent_children= [child for child in cards_parent.children ]  
 
-    print("cards parent_children:",parent_children)
     home_cards = parent_children[0].children[0].children[0].children[0].child_node_count 
     away_cards = parent_children[0].children[0].children[0].children[0].child_node_count 
     print(f"home cards:{home_cards}")
     print(f"away cards:{away_cards}")
 
-    home_team_fouls= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
-    #print("Home team fouls:", home_team_fouls.text)
-    away_team_fouls = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
-    #print("away team fouls:", away_team_fouls.text)
+    #Just to find the fucking fouls bruv!
+    fouls= await page.find("Fouls",best_match=True)
+    parent = fouls.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    fouls_index= parent_children.index(fouls)  
+    # print(f"fouls index:{parent_fouls_index}")
+    home_fouls= parent_children[fouls_index-1]
+    away_fouls= parent_children[fouls_index+1]
 
-    home_team_corners= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
-    #print("Home team corners:", home_team_corners.text)
-    away_team_corners = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
-    #print("away team corners:", away_team_corners.text)
+    print(f"home fouls:{home_fouls.text}")
+    print(f"away fouls:{away_fouls.text}")
 
-    home_team_crosses= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
-    #print("Home team crosses:", home_team_crosses.text)
-    away_team_crosses = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
-    #print("away team crosses:", away_team_crosses.text)
+    #Just to find the fucking corners bruv!
+    corners= await page.find("corners",best_match=True)
+    parent = corners.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    corners_index= parent_children.index(corners)  
+    # print(f"corners index:{parent_corners_index}")
+    home_corners= parent_children[corners_index-1]
+    away_corners= parent_children[corners_index+1]
 
-    home_team_touches= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
-    #print("Home team touches:", home_team_touches.text)
-    away_team_touches = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
-    #print("away team touches:", away_team_touches.text)
+    print(f"home corners:{home_corners.text}")
+    print(f"away corners:{away_corners.text}")
 
-    home_team_tackels= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
-    #print("Home team tackels:", home_team_tackels.text)
-    away_team_tackels = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
-    #print("away team tackels:", away_team_tackels.text)
+    #Just to find the fucking crosses bruv!
+    crosses= await page.find("crosses",best_match=True)
+    parent = crosses.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    crosses_index= parent_children.index(crosses)  
+    # print(f"crosses index:{parent_crosses_index}")
+    home_crosses= parent_children[crosses_index-1]
+    away_crosses= parent_children[crosses_index+1]
 
-    home_team_interceptions= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
-    #print("Home team interceptions:", home_team_interceptions.text)
-    away_team_interceptions = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
-    #print("away team interceptions:", away_team_interceptions.text)
+    print(f"home crosses:{home_crosses.text}")
+    print(f"away crosses:{away_crosses.text}")
 
-    home_team_aerials= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
-    #print("Home team aerials:", home_team_aerials.text)
-    away_team_aerials = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
-    #print("away team aerials:", away_team_aerials.text)
+    #Just to find the fucking touches bruv!
+    touches= await page.find("touches",best_match=True)
+    parent = touches.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    touches_index= parent_children.index(touches)  
+    # print(f"touches index:{parent_touches_index}")
+    home_touches= parent_children[touches_index-1]
+    away_touches= parent_children[touches_index+1]
 
-    home_team_clearances= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
-    #print("Home team clearances:", home_team_clearances.text)
-    away_team_clearances = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
-    #print("away team clearances:", away_team_clearances.text)
+    print(f"home touches:{home_touches.text}")
+    print(f"away touches:{away_touches.text}")
 
-    home_team_offsides= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
-    #print("Home team offsides:", home_team_offsides.text)
-    away_team_offsides = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
-    #print("away team offsides:", away_team_offsides.text)
+    #Just to find the fucking tackles bruv!
+    tackles= await page.find("Tackles",best_match=True)
+    parent = tackles.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    tackles_index= parent_children.index(tackles)  
+    # print(f"tackles index:{parent_tackles_index}")
+    home_tackels= parent_children[tackles_index-1]
+    away_tackels= parent_children[tackles_index+1]
 
-    home_team_goal_kicks= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
-    #print("Home team goal_kicks:", home_team_goal_kicks.text)
-    away_team_goal_kicks = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
-    #print("away team goal_kicks:", away_team_goal_kicks.text)
+    print(f"home tackles:{home_tackels.text}")
+    print(f"away tackles:{away_tackels.text}")
 
-    home_team_throw_ins= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
-    #print("Home team throw_ins:", home_team_throw_ins.text)
-    away_team_throw_ins = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
-    #print("away team throw_ins:", away_team_throw_ins.text)
+    #Just to find the fucking interceptions bruv!
+    interceptions= await page.find("Interceptions",best_match=True)
+    parent = interceptions.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    interceptions_index= parent_children.index(interceptions)  
+    # print(f"interceptions index:{parent_interceptions_index}")
+    home_interceptions= parent_children[interceptions_index-1]
+    away_interceptions= parent_children[interceptions_index+1]
 
-    home_team_long_balls= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
-    #print("Home team long_balls:", home_team_long_balls.text)
-    away_team_long_balls = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
-    #print("away team long_balls:", away_team_long_balls.text)
+    print(f"home interceptions:{home_interceptions.text}")
+    print(f"away interceptions:{away_interceptions.text}")
+
+
+    #Just to find the fucking aerials bruv!
+    aerials= await page.find("Aerials Won",best_match=True)
+    parent = aerials.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    aerials_index= parent_children.index(aerials)  
+    # print(f"aerials index:{parent_aerials_index}")
+    home_aerials= parent_children[aerials_index-1]
+    away_aerials= parent_children[aerials_index+1]
+
+    print(f"home aerials:{home_aerials.text}")
+    print(f"away aerials:{away_aerials.text}")
+
+    #Just to find the fucking clearances bruv!
+    clearances= await page.find("Clearances",best_match=True)
+    parent = clearances.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    clearances_index= parent_children.index(clearances)  
+    # print(f"clearances index:{parent_clearances_index}")
+    home_clearances= parent_children[clearances_index-1]
+    away_clearances= parent_children[clearances_index+1]
+
+    print(f"home clearances:{home_clearances.text}")
+    print(f"away clearances:{away_clearances.text}")
+
+    #Just to find the fucking offsides bruv!
+    offsides= await page.find("Offsides",best_match=True)
+    parent = offsides.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    offsides_index= parent_children.index(offsides)  
+    # print(f"offsides index:{parent_offsides_index}")
+    home_offsides= parent_children[offsides_index-1]
+    away_offsides= parent_children[offsides_index+1]
+
+    print(f"home offsides:{home_offsides.text}")
+    print(f"away offsides:{away_offsides.text}")
+
+    #Just to find the fucking goal kicks bruv!
+    goal_kicks= await page.find("Goal Kicks",best_match=True)
+    parent = goal_kicks.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    goal_kicks_index= parent_children.index(goal_kicks)  
+    # print(f"goal kicks index:{parent_goal_kicks_index}")
+    home_goal_kicks= parent_children[goal_kicks_index-1]
+    away_goal_kicks= parent_children[goal_kicks_index+1]
+
+    print(f"home goal kicks:{home_goal_kicks.text}")
+    print(f"away goal kicks:{away_goal_kicks.text}")
+
+    #Just to find the fucking throw ins bruv!
+    throw_ins= await page.find("Throw Ins",best_match=True)
+    parent = throw_ins.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    throw_ins_index= parent_children.index(throw_ins)  
+    # print(f"throw ins index:{parent_throw_ins_index}")
+    home_throw_ins= parent_children[throw_ins_index-1]
+    away_throw_ins= parent_children[throw_ins_index+1]
+
+    print(f"home throw ins:{home_throw_ins.text}")
+    print(f"away throw ins:{away_throw_ins.text}")
+
+    #Just to find the fucking long balls bruv!
+    long_balls= await page.find("Long Balls",best_match=True)
+    parent = long_balls.parent  
+    # Get all children and filter to only element nodes (skip text nodes)  
+    parent_children = [child for child in parent.children ]  
+    # print("element children",grandpa_children)
+    long_balls_index= parent_children.index(long_balls)  
+    # print(f"long balls index:{parent_long_balls_index}")
+    home_long_balls= parent_children[long_balls_index-1]
+    away_long_balls= parent_children[long_balls_index+1]
+
+    print(f"home long balls:{home_long_balls.text}")
+    print(f"away long balls:{away_long_balls.text}")
+
     print("finished scrapping the page:", url)
     return {
         'match_url':url,
@@ -277,30 +386,30 @@ async def get_page_content(url, page):
         'away_total_saves': away_total_saves,
         'home_team_cards_number': home_cards,
         'away_team_cards_number': away_cards,
-        'home_team_fouls': home_team_fouls.text,
-        'away_team_fouls': away_team_fouls.text,
-        'home_team_corners': home_team_corners.text if home_team_corners != None else np.nan,
-        'away_team_corners': away_team_corners.text if away_team_corners != None else np.nan,
-        'home_team_crosses': home_team_crosses.text if home_team_crosses != None else np.nan,
-        'away_team_crosses': away_team_crosses.text if away_team_crosses != None else np.nan,
-        'home_team_touches': home_team_touches.text if home_team_touches != None else np.nan,
-        'away_team_touches': away_team_touches.text if away_team_touches != None else np.nan,
-        'home_team_tackels': home_team_tackels.text if home_team_tackels != None else np.nan,
-        'away_team_tackels': away_team_tackels.text if away_team_tackels != None else np.nan,
-        'home_team_interceptions': home_team_interceptions.text if home_team_interceptions != None else np.nan,
-        'away_team_interceptions': away_team_interceptions.text if away_team_interceptions != None else np.nan,
-        'home_team_aerials': home_team_aerials.text if home_team_aerials != None else np.nan,
-        'away_team_aerials': away_team_aerials.text if away_team_aerials != None else np.nan,
-        'home_team_clearances': home_team_clearances.text if home_team_clearances != None else np.nan,
-        'away_team_clearances': away_team_clearances.text if away_team_clearances != None else np.nan,
-        'home_team_offsides': home_team_offsides.text if home_team_offsides != None else np.nan,
-        'away_team_offsides': away_team_offsides.text if away_team_offsides != None else np.nan,
-        'home_team_goal_kicks': home_team_goal_kicks.text if home_team_goal_kicks != None else np.nan,
-        'away_team_goal_kicks': away_team_goal_kicks.text if away_team_goal_kicks != None else np.nan,
-        'home_team_throw_ins': home_team_throw_ins.text if home_team_throw_ins != None else np.nan,
-        'away_team_throw_ins': away_team_throw_ins.text if away_team_throw_ins != None else np.nan,
-        'home_team_long_balls': home_team_long_balls.text if home_team_long_balls != None else np.nan,
-        'away_team_long_balls': away_team_long_balls.text if away_team_long_balls != None else np.nan,
+        'home_fouls': home_fouls.text,
+        'away_fouls': away_fouls.text,
+        'home_corners': home_corners.text if home_corners != None else np.nan,
+        'away_corners': away_corners.text if away_corners != None else np.nan,
+        'home_crosses': home_crosses.text if home_crosses != None else np.nan,
+        'away_crosses': away_crosses.text if away_crosses != None else np.nan,
+        'home_touches': home_touches.text if home_touches != None else np.nan,
+        'away_touches': away_touches.text if away_touches != None else np.nan,
+        'home_tackels': home_tackels.text if home_tackels != None else np.nan,
+        'away_tackels': away_tackels.text if away_tackels != None else np.nan,
+        'home_interceptions': home_interceptions.text if home_interceptions != None else np.nan,
+        'away_interceptions': away_interceptions.text if away_interceptions != None else np.nan,
+        'home_aerials': home_aerials.text if home_aerials != None else np.nan,
+        'away_aerials': away_aerials.text if away_aerials != None else np.nan,
+        'home_clearances': home_clearances.text if home_clearances != None else np.nan,
+        'away_clearances': away_clearances.text if away_clearances != None else np.nan,
+        'home_offsides': home_offsides.text if home_offsides != None else np.nan,
+        'away_offsides': away_offsides.text if away_offsides != None else np.nan,
+        'home_goal_kicks': home_goal_kicks.text if home_goal_kicks != None else np.nan,
+        'away_goal_kicks': away_goal_kicks.text if away_goal_kicks != None else np.nan,
+        'home_throw_ins': home_throw_ins.text if home_throw_ins != None else np.nan,
+        'away_throw_ins': away_throw_ins.text if away_throw_ins != None else np.nan,
+        'home_long_balls': home_long_balls.text if home_long_balls != None else np.nan,
+        'away_long_balls': away_long_balls.text if away_long_balls != None else np.nan,
     }
 
 
