@@ -15,7 +15,7 @@ HEADLESS = True    # Set False if you want to see the browsers (slower)
 
 # --- 1. SHARED HELPER FUNCTIONS ---
 
-async def safe_get(page, selector, attribute='text', timeout=1):
+async def page.select( selector, attribute='text', timeout=1):
     """Safely gets an attribute from an element. Fast timeout to speed up misses."""
     try:
         element = await page.select(selector, timeout=timeout)
@@ -58,81 +58,81 @@ async def get_page_content(url, page):
             # --- YOUR DETAILED EXTRACTION LOGIC ---
             
             # 1. Header Info
-            home_team_name = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
-            away_team_name = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
-            home_team_score = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
-            away_team_score = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
-            home_team_xg = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
-            away_team_xg = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
+            home_team_name = await page.select(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
+            away_team_name = await page.select(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
+            home_team_score = await page.select(page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
+            away_team_score = await page.select(page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
+            home_team_xg = await page.select(page, "#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
+            away_team_xg = await page.select(page, "#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
 
             # 2. Managers & Captains
-            h_mgr = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(5)", 'text_all')
-            a_mgr = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(5)", 'text_all')
+            h_mgr = await page.select(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(5)", 'text_all')
+            a_mgr = await page.select(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(5)", 'text_all')
             home_manager = h_mgr.split(":")[-1].strip() if h_mgr else None
             away_manager = a_mgr.split(":")[-1].strip() if a_mgr else None
 
-            home_captain = await safe_get(page,page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
-            away_captain = await safe_get(page,page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
+            home_captain = await page.select(page, "#content > div.scorebox > div:nth-child(1) > div:nth-child(6) > a")
+            away_captain = await page.select(page, "#content > div.scorebox > div:nth-child(2) > div:nth-child(6) > a")
 
             # 3. Metadata
-            match_time_full = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime", 'text_all')
+            match_time_full = await page.select(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.localtime", 'text_all')
             match_time = match_time_full.split()[0] if match_time_full else None
-            attendance = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
-            venue = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
-            officials = await safe_get(page,page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small", 'text_all')
+            attendance = await page.select(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
+            venue = await page.select(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
+            officials = await page.select(page, "#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small", 'text_all')
 
             # 4. Standard Stats
-            h_poss = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            a_poss = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            h_poss = await page.select(page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            a_poss = await page.select(page, "#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
             
-            h_pass_acc = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            a_pass_acc = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            h_pass_acc = await page.select(page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            a_pass_acc = await page.select(page, "#team_stats > table > tbody > tr:nth-child(5) > td:nth-child(2) > div > div:nth-child(1) > strong")
             
-            h_shot_acc = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            a_shot_acc = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            h_shot_acc = await page.select(page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            a_shot_acc = await page.select(page, "#team_stats > table > tbody > tr:nth-child(7) > td:nth-child(2) > div > div:nth-child(1) > strong")
             
-            h_save_acc = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            a_save_acc = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
+            h_save_acc = await page.select(page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(1) > div > div:nth-child(1) > strong")
+            a_save_acc = await page.select(page, "#team_stats > table > tbody > tr:nth-child(9) > td:nth-child(2) > div > div:nth-child(1) > strong")
 
-            h_cards = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div", 'child_count')
-            a_cards = await safe_get(page,page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div", 'child_count')
+            h_cards = await page.select(page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div", 'child_count')
+            a_cards = await page.select(page, "#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div", 'child_count')
 
             # 5. Extra Stats (The ones you asked to add back)
-            h_fouls = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
-            a_fouls = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
+            h_fouls = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
+            a_fouls = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
             
-            h_corners = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
-            a_corners = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
+            h_corners = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
+            a_corners = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
             
-            h_crosses = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
-            a_crosses = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
+            h_crosses = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
+            a_crosses = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
             
-            h_touches = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
-            a_touches = await safe_get(page,page, "#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
+            h_touches = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
+            a_touches = await page.select(page, "#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
 
-            h_tackles = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
-            a_tackles = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
+            h_tackles = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
+            a_tackles = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
             
-            h_interceptions = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
-            a_interceptions = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
+            h_interceptions = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
+            a_interceptions = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
             
-            h_aerials = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
-            a_aerials = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
+            h_aerials = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
+            a_aerials = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
             
-            h_clearances = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
-            a_clearances = await safe_get(page,page, "#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
+            h_clearances = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
+            a_clearances = await page.select(page, "#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
 
-            h_offsides = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
-            a_offsides = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
+            h_offsides = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
+            a_offsides = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
             
-            h_goalkicks = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
-            a_goalkicks = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
+            h_goalkicks = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
+            a_goalkicks = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
             
-            h_throwins = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
-            a_throwins = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
+            h_throwins = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
+            a_throwins = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
             
-            h_longballs = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
-            a_longballs = await safe_get(page,page, "#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
+            h_longballs = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
+            a_longballs = await page.select(page, "#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
 
             return {
                 'match_url': url,

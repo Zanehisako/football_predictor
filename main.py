@@ -4,6 +4,7 @@ import pandas as pd
 import random
 import os
 import zendriver.cdp.network as network # Import the network module
+import numpy as np
 
 # --- Helper Function for Safe Extraction ---
 async def safe_get(page,selector, timeout=1):
@@ -20,278 +21,288 @@ async def safe_get(page,selector, timeout=1):
 async def get_page_content(url, page):
     print(f"Starting to scrape: {url}")
     
-    max_retries = 3
-    for attempt in range(1, max_retries + 1):
-        try:
-            await page.get(url)
-            
-            # Smart wait
-            try:
-                await page.wait_for_ready_state("complete", timeout=15)
-            except Exception:
-                pass 
+    await page.get(url)
+        
+    # Smart wait
+    try:
+        await page.wait_for_ready_state("complete", timeout=15)
+    except Exception:
+        pass 
 
-            # Wait for the scorebox. If this fails, the page isn't ready.
-            await page.wait_for('#content > div.scorebox', timeout=10)
-            
-            home_team_name= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
-            #print("Home team name:", home_team_name.text)
-            away_team_name= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
-            #print("away team name:", away_team_name.text)
-            home_team_score= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
-            #print("Home team score:", home_team_score.text)
-            away_team_score= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
-            #print("away team score:", away_team_score.text)
-            home_team_xg= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
-            #print("Home team XG:", home_team_xg.text)
-            away_team_xg= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
-            #print("away team XG:", away_team_xg.text)
+    # Wait for the scorebox. If this fails, the page isn't ready.
+    await page.wait_for('#content > div.scorebox', timeout=10)
+        
+    home_team_name= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div:nth-child(1) > strong > a")
+    #print("Home team name:", home_team_name.text)
+    away_team_name= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div:nth-child(1) > strong > a")
+    #print("away team name:", away_team_name.text)
+    home_team_score= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div.scores > div.score")
+    #print("Home team score:", home_team_score.text)
+    away_team_score= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div.scores > div.score")
+    #print("away team score:", away_team_score.text)
+    home_team_xg= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div.scores > div.score_xg")
+    #print("Home team XG:", home_team_xg.text)
+    away_team_xg= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div.scores > div.score_xg")
+    #print("away team XG:", away_team_xg.text)
 
-            home_team_manager= await safe_get(page,"#content > div.scorebox > div:nth-child(1) > div:nth-child(5)")
-            #print("Home team manager:", home_team_manager.text_all.split(":")[-1])
-            away_team_manager= await safe_get(page,"#content > div.scorebox > div:nth-child(2) > div:nth-child(5)")
-            #print("away team manager:", away_team_manager.text_all.split(":")[-1])
+    # Find all strong elements with "Manager" text  
+    manager_strongs = await page.select_all("strong")  
+    manager_elements = [elem for elem in manager_strongs  if "Manager" in elem.text]  
+    
+    for i, manager in enumerate(manager_elements):  
+        match i:
+            case 0:
+                manager_info= manager.parent.text_all.split()
+                home_team_manager= manager_info[-2] + " " + manager_info[-1]
+                print(f"manager:{home_team_manager}")
+            case 1:
+                manager_info= manager.parent.text_all.split()
+                away_team_manager = manager_info[-2] + " " + manager_info[-1]
+                print(f"manager:{away_team_manager}")
 
-            "#sb_team_0 > div:nth-child(5) > a"
-            "#sb_team_0 > div:nth-child(6) > a"
-            captins= await page.find_all("Captain")
-            for i,captin in enumerate(captins):
-                match i:
-                    case 0:
-                        print(f"home_captin{captin}")
-                        # Get the parent element  
-                        parent = captin.parent  
-                        home_team_capatin= await parent.query_selector("a")  
-                        if home_team_capatin:
-                            print(f"home team cap:{home_team_capatin.text}")
-                    case 1:
-                        print(f"away_captin{captin}")
-                        # Get the parent element  
-                        parent = captin.parent  
-                        away_team_capatin= await parent.query_selector("a")  
-                        if away_team_capatin:
-                            print(f"away team cap:{away_team_capatin.text}")
+    captins= await page.find_all("Captain")
+    for i,captin in enumerate(captins):
+        match i:
+            case 0:
+                # print(f"home_captin{captin}")
+                # Get the parent element  
+                parent = captin.parent  
+                home_team_capatin= await parent.query_selector("a")  
+                # if home_team_capatin:
+                #      print(f"home team cap:{home_team_capatin.text}")
+            case 1:
+                # print(f"away_captin{captin}")
+                # Get the parent element  
+                parent = captin.parent  
+                away_team_capatin= await parent.query_selector("a")  
+                # if away_team_capatin:
+                #     print(f"away team cap:{away_team_capatin.text}")
 
-            match_time= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.venuetime")
-            #print("match time:", match_time.text_all.split()[0])
+    match_time= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(1) > span.venuetime")
+    #print("match time:", match_time.text_all.split()[0])
 
-            attendance= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
-            #print("attendance:", attendance.text)
+    attendance= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(5) > small")
+    #print("attendance:", attendance.text)
 
-            venue= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
-            #print("venue:", venue.text)
+    venue= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(6) > small")
+    #print("venue:", venue.text)
 
-            officials= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small")
-            #print("officials:", officials.text_all.strip().split("·"))
+    officials= await safe_get(page,"#content > div.scorebox > div.scorebox_meta > div:nth-child(7) > small")
+    #print("officials:", officials.text_all.strip().split("·"))
 
-            home_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
-            #print("Home team possession:", home_team_possession.text)
-            away_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
-            #print("away team possession:", away_team_possession.text)
+    home_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(1) > div > div:nth-child(1) > strong")
+    #print("Home team possession:", home_team_possession.text)
+    away_team_possession = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(3) > td:nth-child(2) > div > div:nth-child(1) > strong")
+    #print("away team possession:", away_team_possession.text)
 
-            #Just to find the fucking passing bruv!
-            home_team_all_passing= await page.find("Passing Accuracy")
-            parent = home_team_all_passing.parent  
-            grandpa = parent.parent
-            # Get all children and filter to only element nodes (skip text nodes)  
-            grandpa_children = [child for child in grandpa.children ]  
-            # print("element children",grandpa_children)
-            parent_passing_index= grandpa_children.index(parent)  
-            # print(f"passing index:{parent_passing_index}")
-            passing_parent = grandpa_children[parent_passing_index+1]
-            print(f"passing parent:{passing_parent}")
-            parent_children= [child for child in passing_parent.children ]  
+    #Just to find the fucking passing bruv!
+    try:
+        passing_accuracy= await page.find("Passing Accuracy")
+        parent = passing_accuracy.parent  
+        grandpa = parent.parent
+        # Get all children and filter to only element nodes (skip text nodes)  
+        grandpa_children = [child for child in grandpa.children ]  
+        # print("element children",grandpa_children)
+        parent_passing_index= grandpa_children.index(parent)  
+        # print(f"passing index:{parent_passing_index}")
+        passing_parent = grandpa_children[parent_passing_index+1]
+        parent_children= [child for child in passing_parent.children ]  
 
-            home_passing = parent_children[0].children[0].children[0].text.split()
-            home_passing_onTarget= home_passing[0]
-            home_total_passing = home_passing[2]
-            away_passing = parent_children[1].children[0].children[0].text_all.split()
-            away_passing_onTarget= away_passing[2]
-            away_total_passing = away_passing[-1]
-            print(f"home passing on Target:{home_passing_onTarget}")
-            print(f"home all passing:{home_total_passing}")
-            print(f"away passing on Target:{away_passing_onTarget}")
-            print(f"away passing passing:{away_total_passing}")
+        home_passing = parent_children[0].children[0].children[0].text.split()
+        home_passing_onTarget= home_passing[0]
+        home_total_passing = home_passing[2]
+        away_passing = parent_children[1].children[0].children[0].text_all.split()
+        away_passing_onTarget= away_passing[2]
+        away_total_passing = away_passing[-1]
+        print(f"home passing on Target:{home_passing_onTarget}")
+        print(f"home all passing:{home_total_passing}")
+        print(f"away passing on Target:{away_passing_onTarget}")
+        print(f"away passing passing:{away_total_passing}")
+    except:
+        passing_accuracy = None
 
-            #Just to find the fucking shots bruv!
-            home_team_all_shots= await page.find("Shots on Target")
-            parent = home_team_all_shots.parent  
-            grandpa = parent.parent
-            # Get all children and filter to only element nodes (skip text nodes)  
-            grandpa_children = [child for child in grandpa.children ]  
-            # print("element children",grandpa_children)
-            parent_shots_index= grandpa_children.index(parent)  
-            # print(f"shots index:{parent_shots_index}")
-            shots_parent = grandpa_children[parent_shots_index+1]
-            print(f"shots parent:{shots_parent}")
-            parent_children= [child for child in shots_parent.children ]  
+    #Just to find the fucking shots bruv!
+    home_team_all_shots= await page.find("Shots on Target")
+    parent = home_team_all_shots.parent  
+    grandpa = parent.parent
+    # Get all children and filter to only element nodes (skip text nodes)  
+    grandpa_children = [child for child in grandpa.children ]  
+    # print("element children",grandpa_children)
+    parent_shots_index= grandpa_children.index(parent)  
+    # print(f"shots index:{parent_shots_index}")
+    shots_parent = grandpa_children[parent_shots_index+1]
+    parent_children= [child for child in shots_parent.children ]  
 
-            home_shots = parent_children[0].children[0].children[0].text.split()
-            home_shots_onTarget= home_shots[0]
-            home_total_shots = home_shots[2]
-            away_shots = parent_children[1].children[0].children[0].text_all.split()
-            away_shots_onTarget= away_shots[2]
-            away_total_shots = away_shots[-1]
-            print(f"home shots on Target:{home_shots_onTarget}")
-            print(f"home all shots:{home_total_shots}")
-            print(f"away shots on Target:{away_shots_onTarget}")
-            print(f"away all shots:{away_total_shots}")
+    home_shots = parent_children[0].children[0].children[0].text.split()
+    home_shots_onTarget= home_shots[0]
+    home_total_shots = home_shots[2]
+    away_shots = parent_children[1].children[0].children[0].text_all.split()
+    away_shots_onTarget= away_shots[2]
+    away_total_shots = away_shots[-1]
+    print(f"home shots on Target:{home_shots_onTarget}")
+    print(f"home all shots:{home_total_shots}")
+    print(f"away shots on Target:{away_shots_onTarget}")
+    print(f"away all shots:{away_total_shots}")
 
-            #Just to find the fucking saves bruv!
-            home_team_all_saves= await page.find("Saves")
-            parent = home_team_all_saves.parent  
-            grandpa = parent.parent
-            # Get all children and filter to only element nodes (skip text nodes)  
-            grandpa_children = [child for child in grandpa.children ]  
-            # print("element children",grandpa_children)
-            parent_saves_index= grandpa_children.index(parent)  
-            # print(f"saves index:{parent_saves_index}")
-            saves_parent = grandpa_children[parent_saves_index+1]
-            parent_children= [child for child in saves_parent.children ]  
+    #Just to find the fucking saves bruv!
+    home_team_all_saves= await page.find("Saves")
+    parent = home_team_all_saves.parent  
+    grandpa = parent.parent
+    # Get all children and filter to only element nodes (skip text nodes)  
+    grandpa_children = [child for child in grandpa.children ]  
+    # print("element children",grandpa_children)
+    parent_saves_index= grandpa_children.index(parent)  
+    # print(f"saves index:{parent_saves_index}")
+    saves_parent = grandpa_children[parent_saves_index+1]
+    parent_children= [child for child in saves_parent.children ]  
 
-            home_saves = parent_children[0].children[0].children[0].text.split()
-            home_saves_onTarget= home_saves[0]
-            home_total_saves = home_saves[2]
-            away_saves = parent_children[1].children[0].children[0].text_all.split()
-            away_saves_onTarget= away_saves[2]
-            away_total_saves = away_saves[-1]
-            print(f"home saves on Target:{home_saves_onTarget}")
-            print(f"home all saves:{home_total_saves}")
-            print(f"away saves on Target:{away_saves_onTarget}")
-            print(f"away all saves:{away_total_saves}")
+    home_saves = parent_children[0].children[0].children[0].text.split()
+    home_saves_onTarget= home_saves[0]
+    home_total_saves = home_saves[2]
+    away_saves = parent_children[1].children[0].children[0].text_all.split()
+    away_saves_onTarget= away_saves[2]
+    away_total_saves = away_saves[-1]
+    print(f"home saves on Target:{home_saves_onTarget}")
+    print(f"home all saves:{home_total_saves}")
+    print(f"away saves on Target:{away_saves_onTarget}")
+    print(f"away all saves:{away_total_saves}")
 
 
-            home_team_cards= await safe_get(page,"#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(1) > div > div > div")
-            home_team_cards_number =  home_team_cards.child_node_count
-            #print("Home team cards:", home_team_cards_number)
-            away_team_cards = await safe_get(page,"#team_stats > table > tbody > tr:nth-child(11) > td:nth-child(2) > div > div > div")
-            away_team_cards_number =  away_team_cards.child_node_count
-            #print("away team cards:", away_team_cards_number)
+    #Just to find the fucking cards bruv!
+    home_team_all_cards= await page.find("Cards")
+    parent = home_team_all_cards.parent  
+    grandpa = parent.parent
+    # Get all children and filter to only element nodes (skip text nodes)  
+    grandpa_children = [child for child in grandpa.children ]  
+    parent_cards_index= grandpa_children.index(parent)  
+    cards_parent = grandpa_children[parent_cards_index+1]
+    parent_children= [child for child in cards_parent.children ]  
 
-            home_team_fouls= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
-            #print("Home team fouls:", home_team_fouls.text)
-            away_team_fouls = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
-            #print("away team fouls:", away_team_fouls.text)
+    print("cards parent_children:",parent_children)
+    home_cards = parent_children[0].children[0].children[0].children[0].child_count
+    away_cards = parent_children[0].children[0].children[0].children[0].child_count
+    print(f"home cards:{home_cards}")
+    print(f"away cards:{away_cards}")
 
-            home_team_corners= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
-            #print("Home team corners:", home_team_corners.text)
-            away_team_corners = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
-            #print("away team corners:", away_team_corners.text)
+    home_team_fouls= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(4)")
+    #print("Home team fouls:", home_team_fouls.text)
+    away_team_fouls = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(6)")
+    #print("away team fouls:", away_team_fouls.text)
 
-            home_team_crosses= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
-            #print("Home team crosses:", home_team_crosses.text)
-            away_team_crosses = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
-            #print("away team crosses:", away_team_crosses.text)
+    home_team_corners= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(7)")
+    #print("Home team corners:", home_team_corners.text)
+    away_team_corners = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(9)")
+    #print("away team corners:", away_team_corners.text)
 
-            home_team_touches= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
-            #print("Home team touches:", home_team_touches.text)
-            away_team_touches = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
-            #print("away team touches:", away_team_touches.text)
+    home_team_crosses= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(10)")
+    #print("Home team crosses:", home_team_crosses.text)
+    away_team_crosses = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(12)")
+    #print("away team crosses:", away_team_crosses.text)
 
-            home_team_tackels= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
-            #print("Home team tackels:", home_team_tackels.text)
-            away_team_tackels = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
-            #print("away team tackels:", away_team_tackels.text)
+    home_team_touches= await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(13)")
+    #print("Home team touches:", home_team_touches.text)
+    away_team_touches = await safe_get(page,"#team_stats_extra > div:nth-child(1) > div:nth-child(15)")
+    #print("away team touches:", away_team_touches.text)
 
-            home_team_interceptions= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
-            #print("Home team interceptions:", home_team_interceptions.text)
-            away_team_interceptions = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
-            #print("away team interceptions:", away_team_interceptions.text)
+    home_team_tackels= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(4)")
+    #print("Home team tackels:", home_team_tackels.text)
+    away_team_tackels = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(6)")
+    #print("away team tackels:", away_team_tackels.text)
 
-            home_team_aerials= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
-            #print("Home team aerials:", home_team_aerials.text)
-            away_team_aerials = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
-            #print("away team aerials:", away_team_aerials.text)
+    home_team_interceptions= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(7)")
+    #print("Home team interceptions:", home_team_interceptions.text)
+    away_team_interceptions = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(9)")
+    #print("away team interceptions:", away_team_interceptions.text)
 
-            home_team_clearances= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
-            #print("Home team clearances:", home_team_clearances.text)
-            away_team_clearances = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
-            #print("away team clearances:", away_team_clearances.text)
+    home_team_aerials= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(10)")
+    #print("Home team aerials:", home_team_aerials.text)
+    away_team_aerials = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(12)")
+    #print("away team aerials:", away_team_aerials.text)
 
-            home_team_offsides= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
-            #print("Home team offsides:", home_team_offsides.text)
-            away_team_offsides = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
-            #print("away team offsides:", away_team_offsides.text)
+    home_team_clearances= await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(13)")
+    #print("Home team clearances:", home_team_clearances.text)
+    away_team_clearances = await safe_get(page,"#team_stats_extra > div:nth-child(2) > div:nth-child(15)")
+    #print("away team clearances:", away_team_clearances.text)
 
-            home_team_goal_kicks= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
-            #print("Home team goal_kicks:", home_team_goal_kicks.text)
-            away_team_goal_kicks = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
-            #print("away team goal_kicks:", away_team_goal_kicks.text)
+    home_team_offsides= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(4)")
+    #print("Home team offsides:", home_team_offsides.text)
+    away_team_offsides = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(6)")
+    #print("away team offsides:", away_team_offsides.text)
 
-            home_team_throw_ins= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
-            #print("Home team throw_ins:", home_team_throw_ins.text)
-            away_team_throw_ins = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
-            #print("away team throw_ins:", away_team_throw_ins.text)
+    home_team_goal_kicks= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(7)")
+    #print("Home team goal_kicks:", home_team_goal_kicks.text)
+    away_team_goal_kicks = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(9)")
+    #print("away team goal_kicks:", away_team_goal_kicks.text)
 
-            home_team_long_balls= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
-            #print("Home team long_balls:", home_team_long_balls.text)
-            away_team_long_balls = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
-            #print("away team long_balls:", away_team_long_balls.text)
-            print("finished scrapping the page:", url)
-            return {
-                'home_team_name': home_team_name.text,
-                'away_team_name': away_team_name.text,
-                'home_team_score': home_team_score.text,
-                'away_team_score': away_team_score.text,
-                'home_team_xg': home_team_xg.text if home_team_xg.text != None else (int(home_shots_onTarget)*0.30 +int(home_total_shots-home_shots_onTarget)*0.05) ,
-                'away_team_xg': away_team_xg.text if away_team_xg.text != None else (int(away_shots_onTarget)*0.30 +int(away_total_shots-away_shots_onTarget)*0.05) ,
-                'xg_is_estimated':False if home_team_xg.text else True,
-                'home_team_manager': home_team_manager.text_all.split(":")[-1],
-                'away_team_manager': away_team_manager.text_all.split(":")[-1],
-                'home_team_captain': home_team_capatin.text,
-                'away_team_captain': away_team_capatin.text,
-                'match_time': match_time.text_all.split()[0],
-                'attendance': attendance.text,
-                'venue': venue.text,
-                'officials': officials.text_all,
-                'home_team_possession': home_team_possession.text,
-                'away_team_possession': away_team_possession.text,
-                'home_passing_onTarget': home_passing_onTarget,
-                'home_total_passing': home_total_passing,
-                'away_passing_onTarget': away_passing_onTarget,
-                'away_total_passing': away_total_passing,
-                'home_shots_onTarget': home_shots_onTarget,
-                'home_total_shots': home_total_shots,
-                'away_shots_onTarget': away_shots_onTarget,
-                'away_total_shots': away_total_shots,
-                'home_saves_onTarget': home_saves_onTarget,
-                'home_total_saves': home_total_saves,
-                'away_saves_onTarget': away_saves_onTarget,
-                'away_total_saves': away_total_saves,
-                'home_team_cards_number': home_team_cards_number,
-                'away_team_cards_number': away_team_cards_number,
-                'home_team_fouls': home_team_fouls.text,
-                'away_team_fouls': away_team_fouls.text,
-                'home_team_corners': home_team_corners.text,
-                'away_team_corners': away_team_corners.text,
-                'home_team_crosses': home_team_crosses.text,
-                'away_team_crosses': away_team_crosses.text,
-                'home_team_touches': home_team_touches.text,
-                'away_team_touches': away_team_touches.text,
-                'home_team_tackels': home_team_tackels.text,
-                'away_team_tackels': away_team_tackels.text,
-                'home_team_interceptions': home_team_interceptions.text,
-                'away_team_interceptions': away_team_interceptions.text,
-                'home_team_aerials': home_team_aerials.text,
-                'away_team_aerials': away_team_aerials.text,
-                'home_team_clearances': home_team_clearances.text,
-                'away_team_clearances': away_team_clearances.text,
-                'home_team_offsides': home_team_offsides.text,
-                'away_team_offsides': away_team_offsides.text,
-                'home_team_goal_kicks': home_team_goal_kicks.text,
-                'away_team_goal_kicks': away_team_goal_kicks.text,
-                'home_team_throw_ins': home_team_throw_ins.text,
-                'away_team_throw_ins': away_team_throw_ins.text,
-                'home_team_long_balls': home_team_long_balls.text,
-                'away_team_long_balls': away_team_long_balls.text
-            }
+    home_team_throw_ins= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(10)")
+    #print("Home team throw_ins:", home_team_throw_ins.text)
+    away_team_throw_ins = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(12)")
+    #print("away team throw_ins:", away_team_throw_ins.text)
 
-        except Exception as e:
-            print(f"   Attempt {attempt} failed: {e}")
-            if attempt < max_retries:
-                await asyncio.sleep(3)
-            else:
-                return None
+    home_team_long_balls= await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(13)")
+    #print("Home team long_balls:", home_team_long_balls.text)
+    away_team_long_balls = await safe_get(page,"#team_stats_extra > div:nth-child(3) > div:nth-child(15)")
+    #print("away team long_balls:", away_team_long_balls.text)
+    print("finished scrapping the page:", url)
+    return {
+        'match_url':url,
+        'home_team_name': home_team_name.text,
+        'away_team_name': away_team_name.text,
+        'home_team_score': home_team_score.text,
+        'away_team_score': away_team_score.text,
+        'home_team_xg': home_team_xg.text if home_team_xg.text != None else (int(home_shots_onTarget)*0.30 +int(home_total_shots-home_shots_onTarget)*0.05) ,
+        'away_team_xg': away_team_xg.text if away_team_xg.text != None else (int(away_shots_onTarget)*0.30 +int(away_total_shots-away_shots_onTarget)*0.05) ,
+        'xg_is_estimated':False if home_team_xg.text else True,
+        'home_team_manager': home_team_manager,
+        'away_team_manager': away_team_manager,
+        'home_team_captain': home_team_capatin.text,
+        'away_team_captain': away_team_capatin.text,
+        'match_time': match_time.text_all.split()[0],
+        'attendance': attendance.text,
+        'venue': venue.text,
+        'officials': officials.text_all,
+        'home_team_possession': home_team_possession.text,
+        'away_team_possession': away_team_possession.text,
+        'home_passing_onTarget': home_passing_onTarget if passing_accuracy!= None else np.nan,
+        'home_total_passing': home_total_passing if passing_accuracy!= None else np.nan,
+        'away_passing_onTarget': away_passing_onTarget if passing_accuracy!= None else np.nan,
+        'away_total_passing': away_total_passing if passing_accuracy != None else np.nan,
+        'home_shots_onTarget': home_shots_onTarget,
+        'home_total_shots': home_total_shots,
+        'away_shots_onTarget': away_shots_onTarget,
+        'away_total_shots': away_total_shots,
+        'home_saves_onTarget': home_saves_onTarget,
+        'home_total_saves': home_total_saves,
+        'away_saves_onTarget': away_saves_onTarget,
+        'away_total_saves': away_total_saves,
+        'home_team_cards_number': home_team_cards_number,
+        'away_team_cards_number': away_team_cards_number,
+        'home_team_fouls': home_team_fouls.text,
+        'away_team_fouls': away_team_fouls.text,
+        'home_team_corners': home_team_corners.text,
+        'away_team_corners': away_team_corners.text,
+        'home_team_crosses': home_team_crosses.text,
+        'away_team_crosses': away_team_crosses.text,
+        'home_team_touches': home_team_touches.text,
+        'away_team_touches': away_team_touches.text,
+        'home_team_tackels': home_team_tackels.text,
+        'away_team_tackels': away_team_tackels.text,
+        'home_team_interceptions': home_team_interceptions.text,
+        'away_team_interceptions': away_team_interceptions.text,
+        'home_team_aerials': home_team_aerials.text,
+        'away_team_aerials': away_team_aerials.text,
+        'home_team_clearances': home_team_clearances.text,
+        'away_team_clearances': away_team_clearances.text,
+        'home_team_offsides': home_team_offsides.text,
+        'away_team_offsides': away_team_offsides.text,
+        'home_team_goal_kicks': home_team_goal_kicks.text,
+        'away_team_goal_kicks': away_team_goal_kicks.text,
+        'home_team_throw_ins': home_team_throw_ins.text,
+        'away_team_throw_ins': away_team_throw_ins.text,
+        'home_team_long_balls': home_team_long_balls.text,
+        'away_team_long_balls': away_team_long_balls.text
+    }
+
 
 async def scrape_all_club_matches_urls(url, page):
     print("Getting match list for:", url)
@@ -347,7 +358,7 @@ async def scrape_all_club_matches(urls, page):
                 results.append(match_data)
             
             # Polite sleep to avoid IP bans
-            await asyncio.sleep(random.uniform(2, 4))
+            # await asyncio.sleep(random.uniform(2, 4))
             
         except Exception as e:
             print(f"Error on {url}: {e}")
