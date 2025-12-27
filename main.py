@@ -522,7 +522,7 @@ async def main():
     try:
         # Load the input file containing club stats pages
         # Ensure you have a file named 'club_urls.csv' with a column 'club_url'
-        club_urls = pd.read_csv("club_urls_national_africa.csv")['club_url'].tolist()
+        club_urls = pd.read_csv("club_urls_premierLeague.csv")['club_url'].tolist()
         
         browser = await zd.start(headless=True)
         page = await browser.get("about:blank")
