@@ -392,18 +392,44 @@ async def get_page_content(url, page):
 
     #Find the players stats table
     goals= await page.find_all("Gls")
+
+    filter_switcher= await page.select('[class="filter switcher"]')
+    players_stats_table= filter_switcher.parent
+    SUMMARY_INDEX = 0
+    PASSING_INDEX = 1
+    PASS_TYPES_INDEX = 2
+    DEFENSIVE_ACTIONS_INDEX = 3
+    POSSESSION_INDEX = 4
+    MISCELLANEOUS_STATS_INDEX = 5
+    # Element click (recommended)  
+
     for i,goal in enumerate(goals):
         tr= goal.parent  
-        thead = tr.parent
-        players_stats_table= thead.parent
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
         FOOTER_INDEX = 4
         match i:
             case 0:
+                try:
+                    defensive_actions_button = filter_switcher.children[DEFENSIVE_ACTIONS_INDEX]
+                    await defensive_actions_button.click()  
+                    await asyncio.sleep(2.0)  # 1 second delay  
+                    players_stats_current_table = players_stats_table.children[-1].children[-3].children[0]
+                    print("players_stats_current_table", players_stats_current_table)
+                    home_players_tackels_won= None
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
+                    footer_tr = footer.children[0]
+                    home_players_tackels_won= footer_tr.children[6]
+                    print("Home_players_tackels_won:", home_players_tackels_won.text)
+                except:
+                    home_players_tackels_won = None
+
 
                 try:
                     home_players_penalties_made= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_penalties_made= footer_tr.children[8]
                     print("Home_players_penalties_made:", home_players_penalties_made.text)
@@ -412,8 +438,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_penalties_attempted= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_penalties_attempted= footer_tr.children[9]
                     print("Home_players_penalties_attempted:", home_players_penalties_attempted.text)
@@ -422,8 +448,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_npxG= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_npxG= footer_tr.children[19]
                     print("Home_players_npxG:", home_players_npxG.text)
@@ -432,8 +458,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_xAG= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_xAG= footer_tr.children[20]
                     print("Home_players_xAG:", home_players_xAG.text)
@@ -442,8 +468,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_SCA= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_SCA= footer_tr.children[21]
                     print("Home_players_SCA:", home_players_SCA.text)
@@ -453,8 +479,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_GCA= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_GCA= footer_tr.children[22]
                     print("Home_players_GCA:", home_players_GCA.text)
@@ -464,8 +490,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_proggresive_passes= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_proggresive_passes= footer_tr.children[26]
                     print("Home_players_proggresive_passes:", home_players_proggresive_passes.text)
@@ -474,8 +500,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_carries= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_carries= footer_tr.children[27]
                     print("Home_players_carries:", home_players_carries.text)
@@ -484,8 +510,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_proggresive_carries= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_proggresive_carries= footer_tr.children[28]
                     print("Home_players_proggresive_carries:", home_players_proggresive_carries.text)
@@ -494,8 +520,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_take_ons_attempted= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_take_ons_attempted= footer_tr.children[29]
                     print("Home_players_take_ons_attempted:", home_players_take_ons_attempted.text)
@@ -504,8 +530,8 @@ async def get_page_content(url, page):
 
                 try:
                     home_players_take_ons_successfull= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     home_players_take_ons_successfull= footer_tr.children[30]
                     print("Home_players_take_ons_successfull:", home_players_take_ons_successfull.text)
@@ -515,8 +541,8 @@ async def get_page_content(url, page):
             case 1:
                 try:
                     away_players_penalties_made= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_penalties_made= footer_tr.children[8]
                     print("away_players_penalties_made:", away_players_penalties_made.text)
@@ -525,8 +551,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_penalties_attempted= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_penalties_attempted= footer_tr.children[9]
                     print("away_players_penalties_attempted:", away_players_penalties_attempted.text)
@@ -535,8 +561,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_npxG= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_npxG= footer_tr.children[19]
                     print("away_players_npxG:", away_players_npxG.text)
@@ -545,8 +571,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_xAG= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_xAG= footer_tr.children[20]
                     print("away_players_xAG:", away_players_xAG.text)
@@ -555,8 +581,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_SCA= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_SCA= footer_tr.children[21]
                     print("away_players_SCA:", away_players_SCA.text)
@@ -566,8 +592,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_GCA= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_GCA= footer_tr.children[22]
                     print("away_players_GCA:", away_players_GCA.text)
@@ -577,8 +603,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_proggresive_passes= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_proggresive_passes= footer_tr.children[26]
                     print("away_players_proggresive_passes:", away_players_proggresive_passes.text)
@@ -587,8 +613,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_carries= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_carries= footer_tr.children[27]
                     print("away_players_carries:", away_players_carries.text)
@@ -597,8 +623,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_proggresive_carries= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_proggresive_carries= footer_tr.children[28]
                     print("away_players_proggresive_carries:", away_players_proggresive_carries.text)
@@ -607,8 +633,8 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_take_ons_attempted= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_take_ons_attempted= footer_tr.children[29]
                     print("away_players_take_ons_attempted:", away_players_take_ons_attempted.text)
@@ -617,13 +643,14 @@ async def get_page_content(url, page):
 
                 try:
                     away_players_take_ons_successfull= None
-                    players_stats_table_children = [child for child in players_stats_table.children ]  
-                    footer = players_stats_table_children[FOOTER_INDEX]
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
                     footer_tr = footer.children[0]
                     away_players_take_ons_successfull= footer_tr.children[30]
                     print("away_players_take_ons_successfull:", away_players_take_ons_successfull.text)
                 except:
                     away_players_take_ons_successfull = None
+
     
     print("finished scrapping the page:", url)
     return {
@@ -778,31 +805,32 @@ async def main():
     try:
         # Load the input file containing club stats pages
         # Ensure you have a file named 'club_urls.csv' with a column 'club_url'
+        club_urls = pd.read_csv("club_urls_test.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_laliga.csv")['club_url'].tolist()
-        club_urls = pd.read_csv("club_urls_premierLeague.csv")['club_url'].tolist()
+        # club_urls = pd.read_csv("club_urls_premierLeague.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_bundesliga.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_ligue1.csv")['club_url'].tolist()
         # clubs_urls = pd.read_csv("club_urls_serieA.csv")['club_url'].tolist()
 
         
-        browser = await zd.start(headless=True)
+        browser = await zd.start(headless=False)
         page = await browser.get("about:blank")
 
-        # --- OPTIMIZATION: ENABLE NETWORK BLOCKING ---
-        # 1. Enable network tracking
-        await page.send(network.enable())
+        # # --- OPTIMIZATION: ENABLE NETWORK BLOCKING ---
+        # # 1. Enable network tracking
+        # await page.send(network.enable())
         
-        # 2. Block heavy resources
-        # Note the function name is 'set_blocked_ur_ls' not 'set_blocked_urls'
-        await page.send(network.set_blocked_ur_ls(urls=[
-            "*.png", "*.jpg", "*.jpeg", "*.gif", "*.svg", "*.webp", # Images
-            "*.css",                                                # Styles (layouts)
-            "*.woff", "*.woff2",                                    # Fonts
-            "*doubleclick*", "*google-analytics*",                  # Ads/Tracking
-            "*googlesyndication*", "*adservice*",
-            "*facebook*", "*twitter*", "*youtube*"
-        ]))
-        print(f"   [Worker] Network blocking enabled (No images/ads)")
+        # # 2. Block heavy resources
+        # # Note the function name is 'set_blocked_ur_ls' not 'set_blocked_urls'
+        # await page.send(network.set_blocked_ur_ls(urls=[
+        #     "*.png", "*.jpg", "*.jpeg", "*.gif", "*.svg", "*.webp", # Images
+        #     "*.css",                                                # Styles (layouts)
+        #     "*.woff", "*.woff2",                                    # Fonts
+        #     "*doubleclick*", "*google-analytics*",                  # Ads/Tracking
+        #     "*googlesyndication*", "*adservice*",
+        #     "*facebook*", "*twitter*", "*youtube*"
+        # ]))
+        # print(f"   [Worker] Network blocking enabled (No images/ads)")
         # ---------------------------------------------
         
         # 2. Collect ALL potential URLs
