@@ -26,74 +26,187 @@ async def safe_get(page,selector, timeout=1):
         print(f"not an element for this selector:{selector}")
         return None
 
-def get_summary_player_stats(footer_tr):
-    try:
-        players_penalties_made= footer_tr.children[8]
-        print("players_penalties_made:", players_penalties_made.text)
-    except:
-        players_penalties_made = None
+async def get_summary_player_stats(page):
 
-    try:
-        players_penalties_attempted= footer_tr.children[9]
-        print("players_penalties_attempted:", players_penalties_attempted.text)
-    except:
-        players_penalties_attempted = None
+    #Find the players stats table
+    goals= await page.find_all("Gls")
 
-    try:
-        players_npxG= footer_tr.children[19]
-        print("players_npxG:", players_npxG.text)
-    except:
-        players_npxG = None
+    for i,goal in enumerate(goals):
+        print("getting advanced stats")
+        FOOTER_INDEX = 4
+        match i:
+            case 0:
+                    tr= goal.parent  
+                    tfoot= tr.parent
+                    players_stats_current_table= tfoot.parent
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
+                    footer_tr = footer.children[0]
+                    print("getting home summary player stats")
+                    try:
+                        players_penalties_made= footer_tr.children[8]
+                        print("home players_penalties_made:", players_penalties_made.text)
+                    except:
+                        players_penalties_made = None
 
-    try:
-        players_xAG= footer_tr.children[20]
-        print("players_xAG:", players_xAG.text)
-    except:
-        players_xAG = None
+                    try:
+                        players_penalties_attempted= footer_tr.children[9]
+                        print("home players_penalties_attempted:", players_penalties_attempted.text)
+                    except:
+                        players_penalties_attempted = None
 
-    try:
-        players_SCA= footer_tr.children[21]
-        print("players_SCA:", players_SCA.text)
-    except:
-        players_SCA = None
+                    try:
+                        players_npxG= footer_tr.children[19]
+                        print("home players_npxG:", players_npxG.text)
+                    except:
+                        players_npxG = None
+
+                    try:
+                        players_xAG= footer_tr.children[20]
+                        print("home players_xAG:", players_xAG.text)
+                    except:
+                        players_xAG = None
+
+                    try:
+                        players_SCA= footer_tr.children[21]
+                        print("home players_SCA:", players_SCA.text)
+                    except:
+                        players_SCA = None
 
 
-    try:
-        players_GCA= footer_tr.children[22]
-        print("players_GCA:", players_GCA.text)
-    except:
-        players_GCA = None
+                    try:
+                        players_GCA= footer_tr.children[22]
+                        print("home players_GCA:", players_GCA.text)
+                    except:
+                        players_GCA = None
 
 
-    try:
-        players_proggresive_passes= footer_tr.children[26]
-        print("players_proggresive_passes:", players_proggresive_passes.text)
-    except:
-        players_proggresive_passes = None
+                    try:
+                        players_proggresive_passes= footer_tr.children[26]
+                        print("home players_proggresive_passes:", players_proggresive_passes.text)
+                    except:
+                        players_proggresive_passes = None
 
-    try:
-        players_carries= footer_tr.children[27]
-        print("players_carries:", players_carries.text)
-    except:
-        players_carries = None
+                    try:
+                        players_carries= footer_tr.children[27]
+                        print("home players_carries:", players_carries.text)
+                    except:
+                        players_carries = None
 
-    try:
-        players_proggresive_carries= footer_tr.children[28]
-        print("players_proggresive_carries:", players_proggresive_carries.text)
-    except:
-        players_proggresive_carries = None
+                    try:
+                        players_proggresive_carries= footer_tr.children[28]
+                        print("home players_proggresive_carries:", players_proggresive_carries.text)
+                    except:
+                        players_proggresive_carries = None
 
-    try:
-        players_take_ons_attempted= footer_tr.children[29]
-        print("players_take_ons_attempted:", players_take_ons_attempted.text)
-    except:
-        players_take_ons_attempted = None
+                    try:
+                        players_take_ons_attempted= footer_tr.children[29]
+                        print("home players_take_ons_attempted:", players_take_ons_attempted.text)
+                    except:
+                        players_take_ons_attempted = None
 
-    try:
-        players_take_ons_successfull= footer_tr.children[30]
-        print("players_take_ons_successfull:", players_take_ons_successfull.text)
-    except:
-        players_take_ons_successfull = None
+                    try:
+                        players_take_ons_successfull= footer_tr.children[30]
+                        print("home players_take_ons_successfull:", players_take_ons_successfull.text)
+                    except:
+                        players_take_ons_successfull = None
+                    # print("home advanced stats")
+                #     players_stats_table= filter_switchers[0].parent
+                #     players_stats_current_table = players_stats_table.children[-1].children[-3].children[0]
+                #     home_players_tackels_won= None
+                #     players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                #     footer = players_stats_current_table_children[FOOTER_INDEX]
+                #     footer_tr = footer.children[0]
+                #     get_summary_player_stats(footer_tr)
+                #     defensive_actions_button = filter_switchers[0].children[DEFENSIVE_ACTIONS_INDEX]
+                #     await defensive_actions_button.click()  
+                #     await asyncio.sleep(2.0)  # 1 second delay  
+                #     players_stats_current_table = players_stats_table.children[-1].children[-3].children[0]
+                #     home_players_tackels_won= None
+                #     players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                #     footer = players_stats_current_table_children[FOOTER_INDEX]
+                #     footer_tr = footer.children[0]
+                #     home_players_tackels_won= footer_tr.children[6]
+                #     print("Home_players_tackels_won:", home_players_tackels_won.text)
+                # except:
+                #     home_players_tackels_won = None
+
+            case 1:
+                    tr= goal.parent  
+                    tfoot= tr.parent
+                    players_stats_current_table= tfoot.parent
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
+                    footer_tr = footer.children[0]
+                    print("getting away summary player stats")
+                    try:
+                        players_penalties_made= footer_tr.children[8]
+                        print("away players_penalties_made:", players_penalties_made.text)
+                    except:
+                        players_penalties_made = None
+
+                    try:
+                        players_penalties_attempted= footer_tr.children[9]
+                        print("away players_penalties_attempted:", players_penalties_attempted.text)
+                    except:
+                        players_penalties_attempted = None
+
+                    try:
+                        players_npxG= footer_tr.children[19]
+                        print("away players_npxG:", players_npxG.text)
+                    except:
+                        players_npxG = None
+
+                    try:
+                        players_xAG= footer_tr.children[20]
+                        print("away players_xAG:", players_xAG.text)
+                    except:
+                        players_xAG = None
+
+                    try:
+                        players_SCA= footer_tr.children[21]
+                        print("away players_SCA:", players_SCA.text)
+                    except:
+                        players_SCA = None
+
+
+                    try:
+                        players_GCA= footer_tr.children[22]
+                        print("away players_GCA:", players_GCA.text)
+                    except:
+                        players_GCA = None
+
+
+                    try:
+                        players_proggresive_passes= footer_tr.children[26]
+                        print("away players_proggresive_passes:", players_proggresive_passes.text)
+                    except:
+                        players_proggresive_passes = None
+
+                    try:
+                        players_carries= footer_tr.children[27]
+                        print("away players_carries:", players_carries.text)
+                    except:
+                        players_carries = None
+
+                    try:
+                        players_proggresive_carries= footer_tr.children[28]
+                        print("away players_proggresive_carries:", players_proggresive_carries.text)
+                    except:
+                        players_proggresive_carries = None
+
+                    try:
+                        players_take_ons_attempted= footer_tr.children[29]
+                        print("away players_take_ons_attempted:", players_take_ons_attempted.text)
+                    except:
+                        players_take_ons_attempted = None
+
+                    try:
+                        players_take_ons_successfull= footer_tr.children[30]
+                        print("away players_take_ons_successfull:", players_take_ons_successfull.text)
+                    except:
+                        players_take_ons_successfull = None
+    
 
 def get_passing_player_stats(footer_tr):
     try:
@@ -545,48 +658,7 @@ async def get_page_content(url, page):
     except:
         long_balls = None
 
-
-    filter_switchers = await page.select_all('[class="filter switcher"]')
-    # Element click (recommended)  
-
-  
-        # Select second element    
-    for i in range(1,3):
-        filter_switchers = await page.select_all('[class="filter switcher"]')  
-        filter_switcher = filter_switchers[i]  
-
-        # Get initial stats  
-        players_stats_div = filter_switcher.parent.children[-1]  
-        players_stats_current_table_footer_row = players_stats_div.children[1].children[0].children[-1].children[0]  
-        get_summary_player_stats(players_stats_current_table_footer_row)  
-
-        passing_button = filter_switcher.children[PASSING_INDEX]  
-        await passing_button.click()  
-        # After clicking, update each element in the chain  
-        # After clicking the filter button  
-        await passing_button.click()  
-        await page.wait_for_ready_state("complete")  
-        await asyncio.sleep(0.5)  
-        
-        # Use JavaScript to get the footer row content directly  
-        footer_content = await page.evaluate("""  
-            () => {  
-                const switchers = document.querySelectorAll('[class="filter switcher"]');  
-                const switcher = switchers[INDEX]; // Replace with your index  
-                const playersDiv = switcher.parentElement.lastElementChild;  
-                const footerRow = playersDiv.children[1].children[0].lastElementChild.firstElementChild;  
-                  
-                // Return the text content or innerHTML  
-                return {  
-                    text: footerRow.textContent,  
-                    html: footerRow.innerHTML,  
-                    children: Array.from(footerRow.children).map(el => el.textContent)  
-                };  
-            }  
-        """.replace("INDEX", str(i)))  
-        
-        print(f"Footer content: {footer_content}")
-
+    await get_summary_player_stats(page)
 
 
     
