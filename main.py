@@ -110,26 +110,6 @@ async def get_summary_player_stats(page):
                         print("home players_take_ons_successfull:", players_take_ons_successfull.text)
                     except:
                         players_take_ons_successfull = None
-                    # print("home advanced stats")
-                #     players_stats_table= filter_switchers[0].parent
-                #     players_stats_current_table = players_stats_table.children[-1].children[-3].children[0]
-                #     home_players_tackels_won= None
-                #     players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
-                #     footer = players_stats_current_table_children[FOOTER_INDEX]
-                #     footer_tr = footer.children[0]
-                #     get_summary_player_stats(footer_tr)
-                #     defensive_actions_button = filter_switchers[0].children[DEFENSIVE_ACTIONS_INDEX]
-                #     await defensive_actions_button.click()  
-                #     await asyncio.sleep(2.0)  # 1 second delay  
-                #     players_stats_current_table = players_stats_table.children[-1].children[-3].children[0]
-                #     home_players_tackels_won= None
-                #     players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
-                #     footer = players_stats_current_table_children[FOOTER_INDEX]
-                #     footer_tr = footer.children[0]
-                #     home_players_tackels_won= footer_tr.children[6]
-                #     print("Home_players_tackels_won:", home_players_tackels_won.text)
-                # except:
-                #     home_players_tackels_won = None
 
             case 1:
                     tr= goal.parent  
@@ -659,6 +639,27 @@ async def get_page_content(url, page):
         long_balls = None
 
     await get_summary_player_stats(page)
+
+    filter_switchers = await page.select_all('[class="filter switcher"]')
+    print("home advanced stats")
+    filter_switcher_children = [child for child in filter_switchers[0].children ]  
+    defensive_actions_button = filter_switcher_children[DEFENSIVE_ACTIONS_INDEX]
+    await defensive_actions_button.click()
+    await asyncio.sleep(2.0)  # 2 second delay  
+    tklWs = await page.find_all("TklW") 
+    
+    tr= tklWs[0].parent  
+    tfoot= tr.parent
+    players_stats_current_table= tfoot.parent
+    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+    footer = players_stats_current_table_children[FOOTER_INDEX]
+    footer_tr = footer.children[0]
+    print("getting home defensive player stats")
+    try:
+        players_tackles_defensive_third= footer_tr.children[8]
+        print("home players_tackles_defensive_third:", players_tackles_defensive_third.text)
+    except:
+        players_tackles_defensive_third = None
 
 
     
