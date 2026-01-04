@@ -27,6 +27,15 @@ async def safe_get(page,selector, timeout=1):
         return None
 
 async def get_summary_player_stats(page):
+    """
+    This function will return the summary player stats of the given page.
+    
+    The function will return a dictionary containing the summary player stats.
+    
+    The dictionary will contain the following keys: home_players.penalties_made, home_players.penalties_attempted, home_players_npxG, home_players_xAG, home_players_SCA, home_players_GCA, away_players.penalties_made, away_players.penalties_attempted, away_players_npxG, away_players_xAG, away_players_SCA, away_players_GCA, away_players_proggresive_passes, away_players_carries, away_players_proggresive_carries, away_players_take_ons_attempted, and away_players_take_ons_successfull.
+    
+    The function will return np.nan for the keys if the stats are not found on the page.
+    """
     try:
         #Find the players stats table
         goals= await page.find_all("Gls")
@@ -210,7 +219,9 @@ async def get_summary_player_stats(page):
     
 
 async def get_passing_player_stats(page):
-
+    """
+    Get passing stats for home and away players
+    """
     try:
         CrsPA = await page.find_all("CrsPA")
         print("len CrsPA:",len(CrsPA))
@@ -419,7 +430,18 @@ async def get_passing_player_stats(page):
 
 
 async def get_defensive_actions_player_stats(page):
-
+    """
+    Get defensive actions player stats function.
+    
+    This function will return the defensive actions player stats of the given page.
+    
+    The function will return a dictionary containing the defensive actions player stats.
+    
+    The dictionary will contain the following keys: home_players_tackles_won, home_players_tackles_defensive_third, home_players_tackles_middle_third, home_players_tackles_attacking_third, home_players_dribblers_tackled, home_players_challanges_lost, home_players_blocks, home_players_shots_blocked, home_players_passes_blocked, home_players_defensive_errors, away_players_tackles_won, away_players_tackles_defensive_third, away_players_tackles_middle_third, away_players_tackles_attacking_third, away_players_dribblers_tackled, away_players_challanges_lost, away_players_blocks, away_players_shots_blocked, away_players_passes_blocked, and away_players_defensive_errors.
+    
+    The function will return np.nan for the keys if the stats are not found on the page.
+    
+    """
     try:
         #Find the players stats table
         Tkl= await page.find_all("Tkl%")
@@ -589,6 +611,11 @@ async def get_defensive_actions_player_stats(page):
     }
 
 async def get_possession_player_stats(page):
+    """
+    Get possession player stats function.
+    This function will return the possession player stats of the given page. 
+    It will return the home and away players possession stats in a dictionary.
+    """
     try:
         PrgR = await page.find_all("PrgR")
         print("len PrgR:",len(PrgR))
@@ -830,6 +857,7 @@ async def get_possession_player_stats(page):
     }
 
 async def get_miscellaneous_player_stats(page):
+    #Getting home miscellaneous player stats
     try:
         PKcon = await page.find_all("PKcon")
         print("len PKcon:",len(PKcon))
@@ -885,6 +913,9 @@ async def get_miscellaneous_player_stats(page):
 
 
 async def get_goalkeeper_player_stats(page):
+    """
+    Returns a dictionary containing home and away goalkeeper stats from a given page.
+    """
     try:
         saves= await page.find_all("Save%")
         print("len saves:",len(saves))
