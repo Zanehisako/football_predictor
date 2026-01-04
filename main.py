@@ -188,84 +188,185 @@ async def get_summary_player_stats(page):
                         players_take_ons_successfull = None
     
 
-def get_passing_player_stats(footer_tr):
-    try:
-        players_passing_total_distance = footer_tr.children[9]
-        print("players_passing_total_distance:", players_passing_total_distance.text)
-    except:
-        players_passing_total_distance= None
+async def get_passing_player_stats(page):
 
-    try:
-        players_passing_progressive_distance= footer_tr.children[10]
-        print("players_passing_prograssive_distance:", players_passing_progressive_distance.text)
-    except:
-        players_passing_progressive_distance = None
+    totDists = await page.find_all("totDist")
 
-    try:
-        players_short_passes_completed = footer_tr.children[11]
-        print("players_short_passes_completed:", players_short_passes_completed.text)
-    except:
-        players_short_passes_completed= None
+    for i,totDist in enumerate(totDists):
+        print("getting advanced stats")
+        FOOTER_INDEX = 4
+        match i:
+            case 0:
+                    tr= totDist.parent  
+                    tfoot= tr.parent
+                    players_stats_current_table= tfoot.parent
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
+                    footer_tr = footer.children[0]
+                    print("getting home passing player stats")
 
-    try:
-        players_short_passes_attempted = footer_tr.children[12]
-        print("players_short_passes_attempted:", players_short_passes_attempted.text)
-    except:
-        players_short_passes_attempted= None
+                    try:
+                        home_players_passing_total_distance = footer_tr.children[9]
+                        print("home_players_passing_total_distance:", home_players_passing_total_distance.text)
+                    except:
+                        home_players_passing_total_distance= None
+
+                    try:
+                        home_players_passing_progressive_distance= footer_tr.children[10]
+                        print("home_players_passing_prograssive_distance:", home_players_passing_progressive_distance.text)
+                    except:
+                        home_players_passing_progressive_distance = None
+
+                    try:
+                        home_players_short_passes_completed = footer_tr.children[11]
+                        print("home_players_short_passes_completed:", home_players_short_passes_completed.text)
+                    except:
+                        home_players_short_passes_completed= None
+
+                    try:
+                        home_players_short_passes_attempted = footer_tr.children[12]
+                        print("home_players_short_passes_attempted:", home_players_short_passes_attempted.text)
+                    except:
+                        home_players_short_passes_attempted= None
 
 
-    try:
-        players_medium_passes_completed = footer_tr.children[14]
-        print("players_medium_passes_completed:", players_medium_passes_completed.text)
-    except:
-        players_medium_passes_completed= None
+                    try:
+                        home_players_medium_passes_completed = footer_tr.children[14]
+                        print("home_players_medium_passes_completed:", home_players_medium_passes_completed.text)
+                    except:
+                        home_players_medium_passes_completed= None
 
-    try:
-        players_medium_passes_attempted = footer_tr.children[15]
-        print("players_medium_passes_attempted:", players_medium_passes_attempted.text)
-    except:
-        players_medium_passes_attempted= None
+                    try:
+                        home_players_medium_passes_attempted = footer_tr.children[15]
+                        print("home_players_medium_passes_attempted:", home_players_medium_passes_attempted.text)
+                    except:
+                        home_players_medium_passes_attempted= None
 
-    try:
-        players_long_passes_completed = footer_tr.children[17]
-        print("players_long_passes_completed:", players_long_passes_completed.text)
-    except:
-        players_long_passes_completed= None
-    try:
-        players_long_passes_attempted = footer_tr.children[18]
-        print("players_long_passes_attempted:", players_long_passes_attempted.text)
-    except:
-        players_long_passes_attempted= None
+                    try:
+                        home_players_long_passes_completed = footer_tr.children[17]
+                        print("home_players_long_passes_completed:", home_players_long_passes_completed.text)
+                    except:
+                        home_players_long_passes_completed= None
+                    try:
+                        home_players_long_passes_attempted = footer_tr.children[18]
+                        print("home_players_long_passes_attempted:", home_players_long_passes_attempted.text)
+                    except:
+                        home_players_long_passes_attempted= None
     
-    try:
-        players_xA = footer_tr.children[22]
-        print("players_xA:", players_xA.text)
-    except:
-        players_xA= None
+                    try:
+                        home_players_xA = footer_tr.children[22]
+                        print("home_players_xA:", home_players_xA.text)
+                    except:
+                        home_players_xA= None
 
-    try:
-        players_key_passes = footer_tr.children[23]
-        print("players_key_passes:", players_key_passes.text)
-    except:
-        players_key_passes= None
+                    try:
+                        home_players_key_passes = footer_tr.children[23]
+                        print("home_players_key_passes:", home_players_key_passes.text)
+                    except:
+                        home_players_key_passes= None
 
-    try:
-        players_passes_final_third = footer_tr.children[24]
-        print("players_passes_final_third:", players_passes_final_third.text)
-    except:
-        players_passes_final_third= None
+                    try:
+                        home_players_passes_final_third = footer_tr.children[24]
+                        print("home_players_passes_final_third:", home_players_passes_final_third.text)
+                    except:
+                        home_players_passes_final_third= None
 
-    try:
-        players_passes_penalty_area = footer_tr.children[25]
-        print("players_penalty_area:", players_passes_penalty_area.text)
-    except:
-        players_passes_penalty_area= None
+                    try:
+                        home_players_passes_penalty_area = footer_tr.children[25]
+                        print("home_players_penalty_area:", home_players_passes_penalty_area.text)
+                    except:
+                        home_players_passes_penalty_area= None
 
-    try:
-        players_crosses_penalty_area = footer_tr.children[26]
-        print("players_crosses_penalty_area:", players_crosses_penalty_area.text)
-    except:
-        players_crosses_penalty_area= None
+                    try:
+                        home_players_crosses_penalty_area = footer_tr.children[26]
+                        print("home_players_crosses_penalty_area:", home_players_crosses_penalty_area.text)
+                    except:
+                        home_players_crosses_penalty_area= None
+            case 1:
+                    tr= totDist.parent  
+                    tfoot= tr.parent
+                    players_stats_current_table= tfoot.parent
+                    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
+                    footer = players_stats_current_table_children[FOOTER_INDEX]
+                    footer_tr = footer.children[0]
+                    print("getting away passing player stats")
+                    try:
+                        away_players_passing_total_distance = footer_tr.children[9]
+                        print("away_players_passing_total_distance:", away_players_passing_total_distance.text)
+                    except:
+                        away_players_passing_total_distance= None
+
+                    try:
+                        away_players_passing_progressive_distance= footer_tr.children[10]
+                        print("away_players_passing_prograssive_distance:", away_players_passing_progressive_distance.text)
+                    except:
+                        away_players_passing_progressive_distance = None
+
+                    try:
+                        away_players_short_passes_completed = footer_tr.children[11]
+                        print("away_players_short_passes_completed:", away_players_short_passes_completed.text)
+                    except:
+                        away_players_short_passes_completed= None
+
+                    try:
+                        away_players_short_passes_attempted = footer_tr.children[12]
+                        print("away_players_short_passes_attempted:", away_players_short_passes_attempted.text)
+                    except:
+                        away_players_short_passes_attempted= None
+
+
+                    try:
+                        away_players_medium_passes_completed = footer_tr.children[14]
+                        print("away_players_medium_passes_completed:", away_players_medium_passes_completed.text)
+                    except:
+                        away_players_medium_passes_completed= None
+
+                    try:
+                        away_players_medium_passes_attempted = footer_tr.children[15]
+                        print("away_players_medium_passes_attempted:", away_players_medium_passes_attempted.text)
+                    except:
+                        away_players_medium_passes_attempted= None
+
+                    try:
+                        away_players_long_passes_completed = footer_tr.children[17]
+                        print("away_players_long_passes_completed:", away_players_long_passes_completed.text)
+                    except:
+                        away_players_long_passes_completed= None
+                    try:
+                        away_players_long_passes_attempted = footer_tr.children[18]
+                        print("away_players_long_passes_attempted:", away_players_long_passes_attempted.text)
+                    except:
+                        away_players_long_passes_attempted= None
+    
+                    try:
+                        away_players_xA = footer_tr.children[22]
+                        print("away_players_xA:", away_players_xA.text)
+                    except:
+                        away_players_xA= None
+
+                    try:
+                        away_players_key_passes = footer_tr.children[23]
+                        print("away_players_key_passes:", away_players_key_passes.text)
+                    except:
+                        away_players_key_passes= None
+
+                    try:
+                        away_players_passes_final_third = footer_tr.children[24]
+                        print("away_players_passes_final_third:", away_players_passes_final_third.text)
+                    except:
+                        away_players_passes_final_third= None
+
+                    try:
+                        away_players_passes_penalty_area = footer_tr.children[25]
+                        print("away_players_penalty_area:", away_players_passes_penalty_area.text)
+                    except:
+                        away_players_passes_penalty_area= None
+
+                    try:
+                        away_players_crosses_penalty_area = footer_tr.children[26]
+                        print("away_players_crosses_penalty_area:", away_players_crosses_penalty_area.text)
+                    except:
+                        away_players_crosses_penalty_area= None
 
 async def get_page_content(url, page):
     print(f"Starting to scrape: {url}")
@@ -638,28 +739,19 @@ async def get_page_content(url, page):
     except:
         long_balls = None
 
+    filter_switchers = await page.select_all('[class="filter switcher"]')
+    filter_switcher_home_children = [child for child in filter_switchers[0].children ]  
+
     await get_summary_player_stats(page)
 
-    filter_switchers = await page.select_all('[class="filter switcher"]')
-    print("home advanced stats")
-    filter_switcher_children = [child for child in filter_switchers[0].children ]  
-    defensive_actions_button = filter_switcher_children[DEFENSIVE_ACTIONS_INDEX]
-    await defensive_actions_button.click()
+    passing_button_home= filter_switcher_home_children[PASSING_INDEX]
+    await passing_button_home.click()
+    filter_switcher_away_children = [child for child in filter_switchers[0].children ]  
+    passing_button_away= filter_switcher_away_children[PASSING_INDEX]
+    await passing_button_away.click()
     await asyncio.sleep(2.0)  # 2 second delay  
-    tklWs = await page.find_all("TklW") 
-    
-    tr= tklWs[0].parent  
-    tfoot= tr.parent
-    players_stats_current_table= tfoot.parent
-    players_stats_current_table_children = [child for child in players_stats_current_table.children ]  
-    footer = players_stats_current_table_children[FOOTER_INDEX]
-    footer_tr = footer.children[0]
-    print("getting home defensive player stats")
-    try:
-        players_tackles_defensive_third= footer_tr.children[8]
-        print("home players_tackles_defensive_third:", players_tackles_defensive_third.text)
-    except:
-        players_tackles_defensive_third = None
+
+    await get_passing_player_stats(page)
 
 
     
