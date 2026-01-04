@@ -511,6 +511,219 @@ async def get_defensive_actions_player_stats(page):
         print("Couldn't get defensive actions stats")
 
 
+async def get_possession_player_stats(page):
+    try:
+        PrgR = await page.find_all("PrgR")
+        print("len PrgR:",len(PrgR))
+
+        tr= PrgR[0].parent  
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
+        players_stats_current_table_children = [child for child in players_stats_current_table.children ] 
+        footer = players_stats_current_table_children[FOOTER_INDEX]
+        footer_tr = footer.children[0]
+        print("getting home possession player stats")
+
+        try:
+            home_players_touches_defensive_penalty_area= footer_tr.children[7]
+            print("home_players_touches_defensive_penalty_area:", home_players_touches_defensive_penalty_area.text)
+        except:
+            home_players_touches_defensive_penalty_area = None
+
+        try:
+            home_players_touches_defensive_third= footer_tr.children[8]
+            print("home_players_touches_defensive_third:", home_players_touches_defensive_third.text)
+        except:
+            home_players_touches_defensive_third = None
+
+        try:
+            home_players_touches_middle_third= footer_tr.children[9]
+            print("home_players_touches_middle_third:", home_players_touches_middle_third.text)
+        except:
+            home_players_touches_middle_third = None
+
+        try:
+            home_players_touches_attacking_third= footer_tr.children[10]
+            print("home_players_touches_attacking_third:", home_players_touches_attacking_third.text)
+        except:
+            home_players_touches_attacking_third = None
+
+
+        try:
+            home_players_touches_attacking_penalty_area= footer_tr.children[11]
+            print("home_players_touches_attacking_penalty_area:", home_players_touches_attacking_penalty_area.text)
+        except:
+            home_players_touches_attacking_penalty_area = None
+
+        try:
+            home_players_live_touches= footer_tr.children[12]
+            print("home_players_live_touches:", home_players_live_touches.text)
+        except:
+            home_players_live_touches = None
+
+        try:
+            home_players_times_tackled_takeOn= footer_tr.children[16]
+            print("home_players_times_tackled_takeOn:", home_players_times_tackled_takeOn.text)
+        except:
+            home_players_times_tackled_takeOn = None
+
+
+        try:
+            home_players_total_carrying_distance= footer_tr.children[19]
+            print("home_players_total_carrying_distance:", home_players_total_carrying_distance.text)
+        except:
+            home_players_total_carrying_distance = None
+
+        try:
+            home_players_progressive_carrying_distance= footer_tr.children[20]
+            print("home_players_progressive_carrying_distance:", home_players_progressive_carrying_distance.text)
+        except:
+            home_players_progressive_carrying_distance = None
+
+        try:
+            home_players_progressive_carrying_final_third= footer_tr.children[22]
+            print("home_players_progressive_carrying_final_third:", home_players_progressive_carrying_final_third.text)
+        except:
+            home_players_progressive_carrying_final_third = None
+
+        try:
+            home_players_progressive_carrying_penalty_area= footer_tr.children[23]
+            print("home_players_progressive_carrying_penalty_area:", home_players_progressive_carrying_penalty_area.text)
+        except:
+            home_players_progressive_carrying_penalty_area = None
+
+        try:
+            home_players_miscontrols= footer_tr.children[24]
+            print("home_players_miscontrols:", home_players_miscontrols.text)
+        except:
+            home_players_miscontrols = None
+
+        try:
+            home_players_dispossessed= footer_tr.children[25]
+            print("home_players_dispossessed:", home_players_dispossessed.text)
+        except:
+            home_players_dispossessed = None
+
+        try:
+            home_players_passes_recived= footer_tr.children[26]
+            print("home_players_passes_recived:", home_players_passes_recived.text)
+        except:
+             home_players_passes_recived = None
+
+        try:
+            home_players_progressive_passes_recived= footer_tr.children[27]
+            print("home_players_progressive_passes_recived:", home_players_progressive_passes_recived.text)
+        except:
+             home_players_progressive_passes_recived = None
+
+        tr= PrgR[1].parent  
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
+        players_stats_current_table_children = [child for child in players_stats_current_table.children ] 
+        footer = players_stats_current_table_children[FOOTER_INDEX]
+        footer_tr = footer.children[0]
+        print("getting away possession player stats")
+
+        try:
+            away_players_touches_defensive_penalty_area= footer_tr.children[7]
+            print("away_players_touches_defensive_penalty_area:", away_players_touches_defensive_penalty_area.text)
+        except:
+            away_players_touches_defensive_penalty_area = None
+
+        try:
+            away_players_touches_defensive_third= footer_tr.children[8]
+            print("away_players_touches_defensive_third:", away_players_touches_defensive_third.text)
+        except:
+            away_players_touches_defensive_third = None
+
+        try:
+            away_players_touches_middle_third= footer_tr.children[9]
+            print("away_players_touches_middle_third:", away_players_touches_middle_third.text)
+        except:
+            away_players_touches_middle_third = None
+
+        try:
+            away_players_touches_attacking_third= footer_tr.children[10]
+            print("away_players_touches_attacking_third:", away_players_touches_attacking_third.text)
+        except:
+            away_players_touches_attacking_third = None
+
+
+        try:
+            away_players_touches_attacking_penalty_area= footer_tr.children[11]
+            print("away_players_touches_attacking_penalty_area:", away_players_touches_attacking_penalty_area.text)
+        except:
+            away_players_touches_attacking_penalty_area = None
+
+        try:
+            away_players_live_touches= footer_tr.children[12]
+            print("away_players_live_touches:", away_players_live_touches.text)
+        except:
+            away_players_live_touches = None
+
+        try:
+            away_players_times_tackled_takeOn= footer_tr.children[16]
+            print("away_players_times_tackled_takeOn:", away_players_times_tackled_takeOn.text)
+        except:
+            away_players_times_tackled_takeOn = None
+
+
+        try:
+            away_players_total_carrying_distance= footer_tr.children[19]
+            print("away_players_total_carrying_distance:", away_players_total_carrying_distance.text)
+        except:
+            away_players_total_carrying_distance = None
+
+        try:
+            away_players_progressive_carrying_distance= footer_tr.children[20]
+            print("away_players_progressive_carrying_distance:", away_players_progressive_carrying_distance.text)
+        except:
+            away_players_progressive_carrying_distance = None
+
+        try:
+            away_players_progressive_carrying_final_third= footer_tr.children[22]
+            print("away_players_progressive_carrying_final_third:", away_players_progressive_carrying_final_third.text)
+        except:
+            away_players_progressive_carrying_final_third = None
+
+        try:
+            away_players_progressive_carrying_penalty_area= footer_tr.children[23]
+            print("away_players_progressive_carrying_penalty_area:", away_players_progressive_carrying_penalty_area.text)
+        except:
+            away_players_progressive_carrying_penalty_area = None
+
+        try:
+            away_players_miscontrols= footer_tr.children[24]
+            print("away_players_miscontrols:", away_players_miscontrols.text)
+        except:
+            away_players_miscontrols = None
+
+        try:
+            away_players_dispossessed= footer_tr.children[25]
+            print("away_players_dispossessed:", away_players_dispossessed.text)
+        except:
+            away_players_dispossessed = None
+
+        try:
+            away_players_passes_recived= footer_tr.children[26]
+            print("away_players_passes_recived:", away_players_passes_recived.text)
+        except:
+            away_players_passes_recived = None
+
+        try:
+            away_players_progressive_passes_recived= footer_tr.children[27]
+            print("away_players_progressive_passes_recived:", away_players_progressive_passes_recived.text)
+        except:
+            away_players_progressive_passes_recived = None
+
+
+
+
+
+
+    except:
+        print("Couldn't get possession stats")
+
 async def get_page_content(url, page):
     print(f"Starting to scrape: {url}")
     
@@ -906,6 +1119,16 @@ async def get_page_content(url, page):
     await asyncio.sleep(2.0)  # 2 second delay  
 
     await get_defensive_actions_player_stats(page)
+
+    possession_button_home= filter_switcher_home_children[POSSESSION_INDEX]
+    await possession_button_home.click()
+    await asyncio.sleep(2.0)  # 2 second delay  
+    possession_button_away= filter_switcher_away_children[POSSESSION_INDEX]
+    await possession_button_away.click()
+    await asyncio.sleep(2.0)  # 2 second delay  
+
+    await get_possession_player_stats(page)
+
 
 
     
