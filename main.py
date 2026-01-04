@@ -765,7 +765,210 @@ async def get_miscellaneous_player_stats(page):
             away_players_aerials_lost = None
 
     except:
-        print("Couldn't get possession stats")
+        print("Couldn't get miscellaneous stats")
+
+
+async def get_goalkeeper_player_stats(page):
+    try:
+        saves= await page.find_all("Save%")
+        print("len saves:",len(saves))
+
+        tr= saves[0].parent  
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
+        players_stats_current_table_children = [child for child in players_stats_current_table.children ] 
+        footer = players_stats_current_table_children[-1]
+        footer_tr = footer.children[0]
+        print("getting home goalkeeper player stats")
+
+        try:
+            home_goalkeeper_shots_onTarget_against = footer_tr.children[4]
+            print("home_goalkeeper_shots_onTarget_against:", home_goalkeeper_shots_onTarget_against.text)
+        except:
+            home_goalkeeper_shots_onTarget_against= None
+
+
+        try:
+            home_goalkeeper_goals_against = footer_tr.children[5]
+            print("home_goalkeeper_goals_against:", home_goalkeeper_goals_against.text)
+        except:
+            home_goalkeeper_goals_against= None
+
+        try:
+            home_goalkeeper_PSxG= footer_tr.children[8]
+            print("home_goalkeeper_PSxG:", home_goalkeeper_PSxG.text)
+        except:
+            home_goalkeeper_PSxG= None
+
+
+        try:
+            home_goalkeeper_long_passes_completed= footer_tr.children[9]
+            print("home_goalkeeper_long_passes_completed:", home_goalkeeper_long_passes_completed.text)
+        except:
+            home_goalkeeper_long_passes_completed= None
+
+        try:
+            home_goalkeeper_long_passes_attempted= footer_tr.children[10]
+            print("home_goalkeeper_long_passes_attempted_launched:", home_goalkeeper_long_passes_attempted.text)
+        except:
+            home_goalkeeper_long_passes_attempted= None
+
+
+        try:
+            home_goalkeeper_short_passes_attempted= footer_tr.children[12]
+            print("home_goalkeeper_short_passes_attempted:", home_goalkeeper_short_passes_attempted.text)
+        except:
+            home_goalkeeper_short_passes_attempted= None
+
+        try:
+            home_goalkeeper_throws_attempted= footer_tr.children[13]
+            print("home_goalkeeper_throws_attempted:", home_goalkeeper_throws_attempted.text)
+        except:
+            home_goalkeeper_throws_attempted= None
+
+        try:
+            home_goalkeeper_average_pass_length= footer_tr.children[15]
+            print("home_goalkeeper_average_pass_length:", home_goalkeeper_average_pass_length.text)
+        except:
+            home_goalkeeper_average_pass_length= None
+
+
+        try:
+            home_goalkeeper_goal_kicks_attempted= footer_tr.children[16]
+            print("home_goalkeeper_goal_kicks_attempted:", home_goalkeeper_goal_kicks_attempted.text)
+        except:
+            home_goalkeeper_goal_kicks_attempted= None
+
+        try:
+            home_goalkeeper_average_goal_kick_length= footer_tr.children[18]
+            print("home_goalkeeper_average_goal_kick_length:", home_goalkeeper_average_goal_kick_length.text)
+        except:
+            home_goalkeeper_average_goal_kick_length= None
+
+        try:
+            home_goalkeeper_crosses_faced= footer_tr.children[19]
+            print("home_goalkeeper_crosses_faced:", home_goalkeeper_crosses_faced.text)
+        except:
+            home_goalkeeper_crosses_faced= None
+
+        try:
+            home_goalkeeper_crosses_stopped= footer_tr.children[20]
+            print("home_goalkeeper_crosses_stopped:", home_goalkeeper_crosses_stopped.text)
+        except:
+            home_goalkeeper_crosses_stopped= None
+
+        try:
+            home_goalkeeper_OPA= footer_tr.children[22]
+            print("home_goalkeeper_OPA:", home_goalkeeper_OPA.text)
+        except:
+            home_goalkeeper_OPA= None
+
+        try:
+            home_goalkeeper_average_distance_def_action= footer_tr.children[23]
+            print("home_goalkeeper_average_distance_def_action:", home_goalkeeper_average_distance_def_action.text)
+        except:
+            home_goalkeeper_average_distance_def_action= None
+
+        tr= saves[1].parent  
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
+        players_stats_current_table_children = [child for child in players_stats_current_table.children ] 
+        footer = players_stats_current_table_children[-1]
+        footer_tr = footer.children[0]
+        print("getting away goalkeeper player stats")
+
+
+
+        try:
+            away_goalkeeper_shots_onTarget_against = footer_tr.children[4]
+            print("away_goalkeeper_shots_onTarget_against:", away_goalkeeper_shots_onTarget_against.text)
+        except:
+            away_goalkeeper_shots_onTarget_against= None
+
+
+        try:
+            away_goalkeeper_goals_against = footer_tr.children[5]
+            print("away_goalkeeper_goals_against:", away_goalkeeper_goals_against.text)
+        except:
+            away_goalkeeper_goals_against= None
+
+        try:
+            away_goalkeeper_PSxG= footer_tr.children[8]
+            print("away_goalkeeper_PSxG:", away_goalkeeper_PSxG.text)
+        except:
+            away_goalkeeper_PSxG= None
+
+
+        try:
+            away_goalkeeper_long_passes_completed= footer_tr.children[9]
+            print("away_goalkeeper_long_passes_completed:", away_goalkeeper_long_passes_completed.text)
+        except:
+            away_goalkeeper_long_passes_completed= None
+
+        try:
+            away_goalkeeper_long_passes_attempted= footer_tr.children[10]
+            print("away_goalkeeper_long_passes_attempted_launched:", away_goalkeeper_long_passes_attempted.text)
+        except:
+            away_goalkeeper_long_passes_attempted= None
+
+
+        try:
+            away_goalkeeper_short_passes_attempted= footer_tr.children[12]
+            print("away_goalkeeper_short_passes_attempted:", away_goalkeeper_short_passes_attempted.text)
+        except:
+            away_goalkeeper_short_passes_attempted= None
+
+        try:
+            away_goalkeeper_throws_attempted= footer_tr.children[13]
+            print("away_goalkeeper_throws_attempted:", away_goalkeeper_throws_attempted.text)
+        except:
+            away_goalkeeper_throws_attempted= None
+
+        try:
+            away_goalkeeper_average_pass_length= footer_tr.children[15]
+            print("away_goalkeeper_average_pass_length:", away_goalkeeper_average_pass_length.text)
+        except:
+            away_goalkeeper_average_pass_length= None
+
+
+        try:
+            away_goalkeeper_goal_kicks_attempted= footer_tr.children[16]
+            print("away_goalkeeper_goal_kicks_attempted:", away_goalkeeper_goal_kicks_attempted.text)
+        except:
+            away_goalkeeper_goal_kicks_attempted= None
+
+        try:
+            away_goalkeeper_average_goal_kick_length= footer_tr.children[18]
+            print("away_goalkeeper_average_goal_kick_length:", away_goalkeeper_average_goal_kick_length.text)
+        except:
+            away_goalkeeper_average_goal_kick_length= None
+
+        try:
+            away_goalkeeper_crosses_faced= footer_tr.children[19]
+            print("away_goalkeeper_crosses_faced:", away_goalkeeper_crosses_faced.text)
+        except:
+            away_goalkeeper_crosses_faced= None
+
+        try:
+            away_goalkeeper_crosses_stopped= footer_tr.children[20]
+            print("away_goalkeeper_crosses_stopped:", away_goalkeeper_crosses_stopped.text)
+        except:
+            away_goalkeeper_crosses_stopped= None
+
+        try:
+            away_goalkeeper_OPA= footer_tr.children[22]
+            print("away_goalkeeper_OPA:", away_goalkeeper_OPA.text)
+        except:
+            away_goalkeeper_OPA= None
+
+        try:
+            away_goalkeeper_average_distance_def_action= footer_tr.children[23]
+            print("away_goalkeeper_average_distance_def_action:", away_goalkeeper_average_distance_def_action.text)
+        except:
+            away_goalkeeper_average_distance_def_action= None
+
+    except:
+        print("Couldn't get goalkeeper stats")
 
 async def get_page_content(url, page):
     print(f"Starting to scrape: {url}")
@@ -1181,6 +1384,7 @@ async def get_page_content(url, page):
 
     await get_miscellaneous_player_stats(page)
 
+    await get_goalkeeper_player_stats(page)
 
     
     print("finished scrapping the page:", url)
