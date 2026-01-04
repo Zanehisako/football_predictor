@@ -193,28 +193,28 @@ async def get_summary_player_stats(page):
         print("Couldn't get summary stats")
     
     return {
-        "home_players_penalties_made": home_players_penalties_made if home_players_penalties_made!= None else np.nan,
-        "home_players_penalties_attempted": home_players_penalties_attempted if home_players_penalties_attempted!= None else np.nan,
-        "home_players_npxG":home_players_npxG if home_players_npxG!= None else np.nan,
-        "home_players_xAG":home_players_xAG if home_players_xAG!= None else np.nan,
-        "home_players_SCA":home_players_SCA if home_players_SCA!= None else np.nan,
-        "home_players_GCA":home_players_GCA if home_players_GCA!= None else np.nan,
-        "home_players_proggresive_passes": home_players_proggresive_passes if home_players_proggresive_passes!= None else np.nan,
-        "home_players_carries": home_players_carries if home_players_carries!= None else np.nan,
-        "home_players_proggresive_carries": home_players_proggresive_carries if home_players_proggresive_carries!= None else np.nan,
-        "home_players_take_ons_attempted": home_players_take_ons_attempted if home_players_take_ons_attempted!= None else np.nan,
-        "home_players_take_ons_successfull": home_players_take_ons_successfull if home_players_take_ons_successfull!= None else np.nan,
-        "away_players_penalties_made": away_players_penalties_made if away_players_penalties_made!= None else np.nan,
-        "away_players_penalties_attempted": away_players_penalties_attempted if away_players_penalties_attempted!= None else np.nan,
-        "away_players_npxG":away_players_npxG if away_players_npxG!= None else np.nan,
-        "away_players_xAG":away_players_xAG if away_players_xAG!= None else np.nan,
-        "away_players_SCA":away_players_SCA if away_players_SCA!= None else np.nan,
-        "away_players_GCA":away_players_GCA if away_players_GCA!= None else np.nan,
-        "away_players_proggresive_passes": away_players_proggresive_passes if away_players_proggresive_passes!= None else np.nan,
-        "away_players_carries": away_players_carries if away_players_carries!= None else np.nan,
-        "away_players_proggresive_carries": away_players_proggresive_carries if away_players_proggresive_carries!= None else np.nan,
-        "away_players_take_ons_attempted": away_players_take_ons_attempted if away_players_take_ons_attempted!= None else np.nan,
-        "away_players_take_ons_successfull": away_players_take_ons_successfull if away_players_take_ons_successfull!= None else np.nan,
+        "home_players_penalties_made": home_players_penalties_made.text if home_players_penalties_made!= None else np.nan,
+        "home_players_penalties_attempted": home_players_penalties_attempted.text if home_players_penalties_attempted!= None else np.nan,
+        "home_players_npxG":home_players_npxG.text if home_players_npxG!= None else np.nan,
+        "home_players_xAG":home_players_xAG.text if home_players_xAG!= None else np.nan,
+        "home_players_SCA":home_players_SCA.text if home_players_SCA!= None else np.nan,
+        "home_players_GCA":home_players_GCA.text if home_players_GCA!= None else np.nan,
+        "home_players_proggresive_passes": home_players_proggresive_passes.text if home_players_proggresive_passes!= None else np.nan,
+        "home_players_carries": home_players_carries.text if home_players_carries!= None else np.nan,
+        "home_players_proggresive_carries": home_players_proggresive_carries.text if home_players_proggresive_carries!= None else np.nan,
+        "home_players_take_ons_attempted": home_players_take_ons_attempted.text if home_players_take_ons_attempted!= None else np.nan,
+        "home_players_take_ons_successfull": home_players_take_ons_successfull.text if home_players_take_ons_successfull!= None else np.nan,
+        "away_players_penalties_made": away_players_penalties_made.text if away_players_penalties_made!= None else np.nan,
+        "away_players_penalties_attempted": away_players_penalties_attempted.text if away_players_penalties_attempted!= None else np.nan,
+        "away_players_npxG":away_players_npxG.text if away_players_npxG!= None else np.nan,
+        "away_players_xAG":away_players_xAG.text if away_players_xAG!= None else np.nan,
+        "away_players_SCA":away_players_SCA.text if away_players_SCA!= None else np.nan,
+        "away_players_GCA":away_players_GCA.text if away_players_GCA!= None else np.nan,
+        "away_players_proggresive_passes": away_players_proggresive_passes.text if away_players_proggresive_passes!= None else np.nan,
+        "away_players_carries": away_players_carries.text if away_players_carries!= None else np.nan,
+        "away_players_proggresive_carries": away_players_proggresive_carries.text if away_players_proggresive_carries!= None else np.nan,
+        "away_players_take_ons_attempted": away_players_take_ons_attempted.text if away_players_take_ons_attempted!= None else np.nan,
+        "away_players_take_ons_successfull": away_players_take_ons_successfull.text if away_players_take_ons_successfull!= None else np.nan,
     }
     
 
@@ -400,32 +400,32 @@ async def get_passing_player_stats(page):
         print("Couldn't get passing stats")
     
     return {
-        "home_players_passing_total_distance": home_players_passing_total_distance if home_players_passing_total_distance!= None else np.nan,
-        "home_players_passing_progressive_distance": home_players_passing_progressive_distance if home_players_passing_progressive_distance!= None else np.nan,
-        "home_players_short_passes_completed": home_players_short_passes_completed if home_players_short_passes_completed!= None else np.nan,
-        "home_players_short_passes_attempted": home_players_short_passes_attempted if home_players_short_passes_attempted!= None else np.nan,
-        "home_players_medium_passes_completed": home_players_medium_passes_completed if home_players_medium_passes_completed!= None else np.nan,
-        "home_players_medium_passes_attempted": home_players_medium_passes_attempted if home_players_medium_passes_attempted!= None else np.nan,
-        "home_players_long_passes_completed": home_players_long_passes_completed if home_players_long_passes_completed!= None else np.nan,
-        "home_players_long_passes_attempted": home_players_long_passes_attempted if home_players_long_passes_attempted!= None else np.nan,
-        "home_players_xA": home_players_xA if home_players_xA!= None else np.nan,
-        "home_players_key_passes": home_players_key_passes if home_players_key_passes!= None else np.nan,
-        "home_players_passes_final_third": home_players_passes_final_third if home_players_passes_final_third!= None else np.nan,
-        "home_players_passes_penalty_area": home_players_passes_penalty_area if home_players_passes_penalty_area!= None else np.nan,
-        "home_players_crosses_penalty_area": home_players_crosses_penalty_area if home_players_crosses_penalty_area!= None else np.nan,
-        "away_players_passing_total_distance": away_players_passing_total_distance if away_players_passing_total_distance!= None else np.nan,
-        "away_players_passing_progressive_distance": away_players_passing_progressive_distance if away_players_passing_progressive_distance!= None else np.nan,
-        "away_players_short_passes_completed": away_players_short_passes_completed if away_players_short_passes_completed!= None else np.nan,
-        "away_players_short_passes_attempted": away_players_short_passes_attempted if away_players_short_passes_attempted!= None else np.nan,
-        "away_players_medium_passes_completed": away_players_medium_passes_completed if away_players_medium_passes_completed!= None else np.nan,
-        "away_players_medium_passes_attempted": away_players_medium_passes_attempted if away_players_medium_passes_attempted!= None else np.nan,
-        "away_players_long_passes_completed": away_players_long_passes_completed if away_players_long_passes_completed!= None else np.nan,
-        "away_players_long_passes_attempted": away_players_long_passes_attempted if away_players_long_passes_attempted!= None else np.nan,
-        "away_players_xA": away_players_xA if away_players_xA!= None else np.nan,
-        "away_players_key_passes": away_players_key_passes if away_players_key_passes!= None else np.nan,
-        "away_players_passes_final_third": away_players_passes_final_third if away_players_passes_final_third!= None else np.nan,
-        "away_players_passes_penalty_area": away_players_passes_penalty_area if away_players_passes_penalty_area!= None else np.nan,
-        "away_players_crosses_penalty_area": away_players_crosses_penalty_area if away_players_crosses_penalty_area!= None else np.nan,
+        "home_players_passing_total_distance": home_players_passing_total_distance.text if home_players_passing_total_distance!= None else np.nan,
+        "home_players_passing_progressive_distance": home_players_passing_progressive_distance.text if home_players_passing_progressive_distance!= None else np.nan,
+        "home_players_short_passes_completed": home_players_short_passes_completed.text if home_players_short_passes_completed!= None else np.nan,
+        "home_players_short_passes_attempted": home_players_short_passes_attempted.text if home_players_short_passes_attempted!= None else np.nan,
+        "home_players_medium_passes_completed": home_players_medium_passes_completed.text if home_players_medium_passes_completed!= None else np.nan,
+        "home_players_medium_passes_attempted": home_players_medium_passes_attempted.text if home_players_medium_passes_attempted!= None else np.nan,
+        "home_players_long_passes_completed": home_players_long_passes_completed.text if home_players_long_passes_completed!= None else np.nan,
+        "home_players_long_passes_attempted": home_players_long_passes_attempted.text if home_players_long_passes_attempted!= None else np.nan,
+        "home_players_xA": home_players_xA.text if home_players_xA!= None else np.nan,
+        "home_players_key_passes": home_players_key_passes.text if home_players_key_passes!= None else np.nan,
+        "home_players_passes_final_third": home_players_passes_final_third.text if home_players_passes_final_third!= None else np.nan,
+        "home_players_passes_penalty_area": home_players_passes_penalty_area.text if home_players_passes_penalty_area!= None else np.nan,
+        "home_players_crosses_penalty_area": home_players_crosses_penalty_area.text if home_players_crosses_penalty_area!= None else np.nan,
+        "away_players_passing_total_distance": away_players_passing_total_distance.text if away_players_passing_total_distance!= None else np.nan,
+        "away_players_passing_progressive_distance": away_players_passing_progressive_distance.text if away_players_passing_progressive_distance!= None else np.nan,
+        "away_players_short_passes_completed": away_players_short_passes_completed.text if away_players_short_passes_completed!= None else np.nan,
+        "away_players_short_passes_attempted": away_players_short_passes_attempted.text if away_players_short_passes_attempted!= None else np.nan,
+        "away_players_medium_passes_completed": away_players_medium_passes_completed.text if away_players_medium_passes_completed!= None else np.nan,
+        "away_players_medium_passes_attempted": away_players_medium_passes_attempted.text if away_players_medium_passes_attempted!= None else np.nan,
+        "away_players_long_passes_completed": away_players_long_passes_completed.text if away_players_long_passes_completed!= None else np.nan,
+        "away_players_long_passes_attempted": away_players_long_passes_attempted.text if away_players_long_passes_attempted!= None else np.nan,
+        "away_players_xA": away_players_xA.text if away_players_xA!= None else np.nan,
+        "away_players_key_passes": away_players_key_passes.text if away_players_key_passes!= None else np.nan,
+        "away_players_passes_final_third": away_players_passes_final_third.text if away_players_passes_final_third!= None else np.nan,
+        "away_players_passes_penalty_area": away_players_passes_penalty_area.text if away_players_passes_penalty_area!= None else np.nan,
+        "away_players_crosses_penalty_area": away_players_crosses_penalty_area.text if away_players_crosses_penalty_area!= None else np.nan,
     }
 
 
@@ -588,26 +588,26 @@ async def get_defensive_actions_player_stats(page):
 
 
     return {
-        "home_players_tackles_won": home_players_tackles_won if home_players_tackles_won!= None else np.nan,
-        "home_players_tackles_defensive_third": home_players_tackles_defensive_third if home_players_tackles_defensive_third!= None else np.nan,
-        "home_players_tackles_middle_third": home_players_tackles_middle_third if home_players_tackles_middle_third!= None else np.nan,
-        "home_players_tackles_attacking_third": home_players_tackles_attacking_third if home_players_tackles_attacking_third!= None else np.nan,
-        "home_players_dribblers_tackled": home_players_dribblers_tackled if home_players_dribblers_tackled!= None else np.nan,
-        "home_players_challanges_lost": home_players_challanges_lost if home_players_challanges_lost!= None else np.nan,
-        "home_players_blocks": home_players_blocks if home_players_blocks!= None else np.nan,
-        "home_players_shots_blocked": home_players_shots_blocked if home_players_shots_blocked!= None else np.nan,
-        "home_players_passes_blocked": home_players_passes_blocked if home_players_passes_blocked!= None else np.nan,
-        "home_players_defensive_errors": home_players_defensive_errors if home_players_defensive_errors!= None else np.nan,
-        "away_players_tackles_won": away_players_tackles_won if away_players_tackles_won!= None else np.nan,
-        "away_players_tackles_defensive_third": away_players_tackles_defensive_third if away_players_tackles_defensive_third!= None else np.nan,
-        "away_players_tackles_middle_third": away_players_tackles_middle_third if away_players_tackles_middle_third!= None else np.nan,
-        "away_players_tackles_attacking_third": away_players_tackles_attacking_third if away_players_tackles_attacking_third!= None else np.nan,
-        "away_players_dribblers_tackled": away_players_dribblers_tackled if away_players_dribblers_tackled!= None else np.nan,
-        "away_players_challanges_lost": away_players_challanges_lost if away_players_challanges_lost!= None else np.nan,
-        "away_players_blocks": away_players_blocks if away_players_blocks!= None else np.nan,
-        "away_players_shots_blocked": away_players_shots_blocked if away_players_shots_blocked!= None else np.nan,
-        "away_players_passes_blocked": away_players_passes_blocked if away_players_passes_blocked!= None else np.nan,
-        "away_players_defensive_errors": away_players_defensive_errors if away_players_defensive_errors!= None else np.nan,
+        "home_players_tackles_won": home_players_tackles_won.text if home_players_tackles_won!= None else np.nan,
+        "home_players_tackles_defensive_third": home_players_tackles_defensive_third.text if home_players_tackles_defensive_third!= None else np.nan,
+        "home_players_tackles_middle_third": home_players_tackles_middle_third.text if home_players_tackles_middle_third!= None else np.nan,
+        "home_players_tackles_attacking_third": home_players_tackles_attacking_third.text if home_players_tackles_attacking_third!= None else np.nan,
+        "home_players_dribblers_tackled": home_players_dribblers_tackled.text if home_players_dribblers_tackled!= None else np.nan,
+        "home_players_challanges_lost": home_players_challanges_lost.text if home_players_challanges_lost!= None else np.nan,
+        "home_players_blocks": home_players_blocks.text if home_players_blocks!= None else np.nan,
+        "home_players_shots_blocked": home_players_shots_blocked.text if home_players_shots_blocked!= None else np.nan,
+        "home_players_passes_blocked": home_players_passes_blocked.text if home_players_passes_blocked!= None else np.nan,
+        "home_players_defensive_errors": home_players_defensive_errors.text if home_players_defensive_errors!= None else np.nan,
+        "away_players_tackles_won": away_players_tackles_won.text if away_players_tackles_won!= None else np.nan,
+        "away_players_tackles_defensive_third": away_players_tackles_defensive_third.text if away_players_tackles_defensive_third!= None else np.nan,
+        "away_players_tackles_middle_third": away_players_tackles_middle_third.text if away_players_tackles_middle_third!= None else np.nan,
+        "away_players_tackles_attacking_third": away_players_tackles_attacking_third.text if away_players_tackles_attacking_third!= None else np.nan,
+        "away_players_dribblers_tackled": away_players_dribblers_tackled.text if away_players_dribblers_tackled!= None else np.nan,
+        "away_players_challanges_lost": away_players_challanges_lost.text if away_players_challanges_lost!= None else np.nan,
+        "away_players_blocks": away_players_blocks.text if away_players_blocks!= None else np.nan,
+        "away_players_shots_blocked": away_players_shots_blocked.text if away_players_shots_blocked!= None else np.nan,
+        "away_players_passes_blocked": away_players_passes_blocked.text if away_players_passes_blocked!= None else np.nan,
+        "away_players_defensive_errors": away_players_defensive_errors.text if away_players_defensive_errors!= None else np.nan,
     }
 
 async def get_possession_player_stats(page):
@@ -824,36 +824,36 @@ async def get_possession_player_stats(page):
         print("Couldn't get possession stats")
 
     return {
-        "home_players_touches_defensive_penalty_area": home_players_touches_defensive_penalty_area if home_players_touches_defensive_penalty_area!= None else np.nan,
-        "home_players_touches_defensive_third": home_players_touches_defensive_third if home_players_touches_defensive_third!= None else np.nan,
-        "home_players_touches_middle_third": home_players_touches_middle_third if home_players_touches_middle_third!= None else np.nan,
-        "home_players_touches_attacking_third": home_players_touches_attacking_third if home_players_touches_attacking_third!= None else np.nan,
-        "home_players_touches_attacking_penalty_area": home_players_touches_attacking_penalty_area if home_players_touches_attacking_penalty_area!= None else np.nan,
-        "home_players_live_touches": home_players_live_touches if home_players_live_touches!= None else np.nan,
-        "home_players_times_tackled_takeOn": home_players_times_tackled_takeOn if home_players_times_tackled_takeOn!= None else np.nan,
-        "home_players_total_carrying_distance": home_players_total_carrying_distance if home_players_total_carrying_distance!= None else np.nan,
-        "home_players_progressive_carrying_distance": home_players_progressive_carrying_distance if home_players_progressive_carrying_distance!= None else np.nan,
-        "home_players_progressive_carrying_final_third": home_players_progressive_carrying_final_third if home_players_progressive_carrying_final_third!= None else np.nan,
-        "home_players_progressive_carrying_penalty_area": home_players_progressive_carrying_penalty_area if home_players_progressive_carrying_penalty_area!= None else np.nan,
-        "home_players_miscontrols": home_players_miscontrols if home_players_miscontrols!= None else np.nan,
-        "home_players_dispossessed": home_players_dispossessed if home_players_dispossessed!= None else np.nan,
-        "home_players_passes_recived": home_players_passes_recived if home_players_passes_recived!= None else np.nan,
-        "home_players_progressive_passes_recived": home_players_progressive_passes_recived if home_players_progressive_passes_recived!= None else np.nan,
-        "away_players_touches_defensive_penalty_area": away_players_touches_defensive_penalty_area if away_players_touches_defensive_penalty_area!= None else np.nan,
-        "away_players_touches_defensive_third": away_players_touches_defensive_third if away_players_touches_defensive_third!= None else np.nan,
-        "away_players_touches_middle_third": away_players_touches_middle_third if away_players_touches_middle_third!= None else np.nan,
-        "away_players_touches_attacking_third": away_players_touches_attacking_third if away_players_touches_attacking_third!= None else np.nan,
-        "away_players_touches_attacking_penalty_area": away_players_touches_attacking_penalty_area if away_players_touches_attacking_penalty_area!= None else np.nan,
-        "away_players_live_touches": away_players_live_touches if away_players_live_touches!= None else np.nan,
-        "away_players_times_tackled_takeOn": away_players_times_tackled_takeOn if away_players_times_tackled_takeOn!= None else np.nan,
-        "away_players_total_carrying_distance": away_players_total_carrying_distance if away_players_total_carrying_distance!= None else np.nan,
-        "away_players_progressive_carrying_distance": away_players_progressive_carrying_distance if away_players_progressive_carrying_distance!= None else np.nan,
-        "away_players_progressive_carrying_final_third": away_players_progressive_carrying_final_third if away_players_progressive_carrying_final_third!= None else np.nan,
-        "away_players_progressive_carrying_penalty_area": away_players_progressive_carrying_penalty_area if away_players_progressive_carrying_penalty_area!= None else np.nan,
-        "away_players_miscontrols": away_players_miscontrols if away_players_miscontrols!= None else np.nan,
-        "away_players_dispossessed": away_players_dispossessed if away_players_dispossessed!= None else np.nan,
-        "away_players_passes_recived": away_players_passes_recived if away_players_passes_recived!= None else np.nan,
-        "away_players_progressive_passes_recived": away_players_progressive_passes_recived if away_players_progressive_passes_recived!= None else np.nan,
+        "home_players_touches_defensive_penalty_area": home_players_touches_defensive_penalty_area.text if home_players_touches_defensive_penalty_area!= None else np.nan,
+        "home_players_touches_defensive_third": home_players_touches_defensive_third.text if home_players_touches_defensive_third!= None else np.nan,
+        "home_players_touches_middle_third": home_players_touches_middle_third.text if home_players_touches_middle_third!= None else np.nan,
+        "home_players_touches_attacking_third": home_players_touches_attacking_third.text if home_players_touches_attacking_third!= None else np.nan,
+        "home_players_touches_attacking_penalty_area": home_players_touches_attacking_penalty_area.text if home_players_touches_attacking_penalty_area!= None else np.nan,
+        "home_players_live_touches": home_players_live_touches.text if home_players_live_touches!= None else np.nan,
+        "home_players_times_tackled_takeOn": home_players_times_tackled_takeOn.text if home_players_times_tackled_takeOn!= None else np.nan,
+        "home_players_total_carrying_distance": home_players_total_carrying_distance.text if home_players_total_carrying_distance!= None else np.nan,
+        "home_players_progressive_carrying_distance": home_players_progressive_carrying_distance.text if home_players_progressive_carrying_distance!= None else np.nan,
+        "home_players_progressive_carrying_final_third": home_players_progressive_carrying_final_third.text if home_players_progressive_carrying_final_third!= None else np.nan,
+        "home_players_progressive_carrying_penalty_area": home_players_progressive_carrying_penalty_area.text if home_players_progressive_carrying_penalty_area!= None else np.nan,
+        "home_players_miscontrols": home_players_miscontrols.text if home_players_miscontrols!= None else np.nan,
+        "home_players_dispossessed": home_players_dispossessed.text if home_players_dispossessed!= None else np.nan,
+        "home_players_passes_recived": home_players_passes_recived.text if home_players_passes_recived!= None else np.nan,
+        "home_players_progressive_passes_recived": home_players_progressive_passes_recived.text if home_players_progressive_passes_recived!= None else np.nan,
+        "away_players_touches_defensive_penalty_area": away_players_touches_defensive_penalty_area.text if away_players_touches_defensive_penalty_area!= None else np.nan,
+        "away_players_touches_defensive_third": away_players_touches_defensive_third.text if away_players_touches_defensive_third!= None else np.nan,
+        "away_players_touches_middle_third": away_players_touches_middle_third.text if away_players_touches_middle_third!= None else np.nan,
+        "away_players_touches_attacking_third": away_players_touches_attacking_third.text if away_players_touches_attacking_third!= None else np.nan,
+        "away_players_touches_attacking_penalty_area": away_players_touches_attacking_penalty_area.text if away_players_touches_attacking_penalty_area!= None else np.nan,
+        "away_players_live_touches": away_players_live_touches.text if away_players_live_touches!= None else np.nan,
+        "away_players_times_tackled_takeOn": away_players_times_tackled_takeOn.text if away_players_times_tackled_takeOn!= None else np.nan,
+        "away_players_total_carrying_distance": away_players_total_carrying_distance.text if away_players_total_carrying_distance!= None else np.nan,
+        "away_players_progressive_carrying_distance": away_players_progressive_carrying_distance.text if away_players_progressive_carrying_distance!= None else np.nan,
+        "away_players_progressive_carrying_final_third": away_players_progressive_carrying_final_third.text if away_players_progressive_carrying_final_third!= None else np.nan,
+        "away_players_progressive_carrying_penalty_area": away_players_progressive_carrying_penalty_area.text if away_players_progressive_carrying_penalty_area!= None else np.nan,
+        "away_players_miscontrols": away_players_miscontrols.text if away_players_miscontrols!= None else np.nan,
+        "away_players_dispossessed": away_players_dispossessed.text if away_players_dispossessed!= None else np.nan,
+        "away_players_passes_recived": away_players_passes_recived.text if away_players_passes_recived!= None else np.nan,
+        "away_players_progressive_passes_recived": away_players_progressive_passes_recived.text if away_players_progressive_passes_recived!= None else np.nan,
     }
 
 async def get_miscellaneous_player_stats(page):
@@ -905,10 +905,10 @@ async def get_miscellaneous_player_stats(page):
     except:
         print("Couldn't get miscellaneous stats")
     return {
-        "home_players_aerials_won": home_players_aerials_won if home_players_aerials_won!= None else np.nan,
-        "home_players_aerials_lost": home_players_aerials_lost if home_players_aerials_lost!= None else np.nan,
-        "away_players_aerials_won": away_players_aerials_won if away_players_aerials_won!= None else np.nan,
-        "away_players_aerials_lost": away_players_aerials_lost if away_players_aerials_lost!= None else np.nan
+        "home_players_aerials_won": home_players_aerials_won.text if home_players_aerials_won!= None else np.nan,
+        "home_players_aerials_lost": home_players_aerials_lost.text if home_players_aerials_lost!= None else np.nan,
+        "away_players_aerials_won": away_players_aerials_won.text if away_players_aerials_won!= None else np.nan,
+        "away_players_aerials_lost": away_players_aerials_lost.text if away_players_aerials_lost!= None else np.nan
     }
 
 
@@ -1116,34 +1116,34 @@ async def get_goalkeeper_player_stats(page):
         print("Couldn't get goalkeeper stats")
 
     return {
-        "home_goalkeeper_shots_onTarget_against": home_goalkeeper_shots_onTarget_against if home_goalkeeper_shots_onTarget_against!= None else np.nan,
-        "home_goalkeeper_goals_against": home_goalkeeper_goals_against if home_goalkeeper_goals_against!= None else np.nan,
-        "home_goalkeeper_PSxG": home_goalkeeper_PSxG if home_goalkeeper_PSxG!= None else np.nan,
-        "home_goalkeeper_long_passes_completed": home_goalkeeper_long_passes_completed if home_goalkeeper_long_passes_completed!= None else np.nan,
-        "home_goalkeeper_long_passes_attempted": home_goalkeeper_long_passes_attempted if home_goalkeeper_long_passes_attempted!= None else np.nan,
-        "home_goalkeeper_short_passes_attempted": home_goalkeeper_short_passes_attempted if home_goalkeeper_short_passes_attempted!= None else np.nan,
-        "home_goalkeeper_throws_attempted": home_goalkeeper_throws_attempted if home_goalkeeper_throws_attempted!= None else np.nan,
-        "home_goalkeeper_average_pass_length": home_goalkeeper_average_pass_length if home_goalkeeper_average_pass_length!= None else np.nan,
-        "home_goalkeeper_goal_kicks_attempted": home_goalkeeper_goal_kicks_attempted if home_goalkeeper_goal_kicks_attempted!= None else np.nan,
-        "home_goalkeeper_average_goal_kick_length": home_goalkeeper_average_goal_kick_length if home_goalkeeper_average_goal_kick_length!= None else np.nan,
-        "home_goalkeeper_crosses_faced": home_goalkeeper_crosses_faced if home_goalkeeper_crosses_faced!= None else np.nan,
-        "home_goalkeeper_crosses_stopped": home_goalkeeper_crosses_stopped if home_goalkeeper_crosses_stopped!= None else np.nan,
-        "home_goalkeeper_OPA": home_goalkeeper_OPA if home_goalkeeper_OPA!= None else np.nan,
-        "home_goalkeeper_average_distance_def_action": home_goalkeeper_average_distance_def_action if home_goalkeeper_average_distance_def_action!= None else np.nan,
-        "away_goalkeeper_shots_onTarget_against": away_goalkeeper_shots_onTarget_against if away_goalkeeper_shots_onTarget_against!= None else np.nan,
-        "away_goalkeeper_goals_against": away_goalkeeper_goals_against if away_goalkeeper_goals_against!= None else np.nan,
-        "away_goalkeeper_PSxG": away_goalkeeper_PSxG if away_goalkeeper_PSxG!= None else np.nan,
-        "away_goalkeeper_long_passes_completed": away_goalkeeper_long_passes_completed if away_goalkeeper_long_passes_completed!= None else np.nan,
-        "away_goalkeeper_long_passes_attempted": away_goalkeeper_long_passes_attempted if away_goalkeeper_long_passes_attempted!= None else np.nan,
-        "away_goalkeeper_short_passes_attempted": away_goalkeeper_short_passes_attempted if away_goalkeeper_short_passes_attempted!= None else np.nan,
-        "away_goalkeeper_throws_attempted": away_goalkeeper_throws_attempted if away_goalkeeper_throws_attempted!= None else np.nan,
-        "away_goalkeeper_average_pass_length": away_goalkeeper_average_pass_length if away_goalkeeper_average_pass_length!= None else np.nan,
-        "away_goalkeeper_goal_kicks_attempted": away_goalkeeper_goal_kicks_attempted if away_goalkeeper_goal_kicks_attempted!= None else np.nan,
-        "away_goalkeeper_average_goal_kick_length": away_goalkeeper_average_goal_kick_length if away_goalkeeper_average_goal_kick_length!= None else np.nan,
-        "away_goalkeeper_crosses_faced": away_goalkeeper_crosses_faced if away_goalkeeper_crosses_faced!= None else np.nan,
-        "away_goalkeeper_crosses_stopped": away_goalkeeper_crosses_stopped if away_goalkeeper_crosses_stopped!= None else np.nan,
-        "away_goalkeeper_OPA": away_goalkeeper_OPA if away_goalkeeper_OPA!= None else np.nan,
-        "away_goalkeeper_average_distance_def_action": away_goalkeeper_average_distance_def_action if away_goalkeeper_average_distance_def_action!= None else np.nan,
+        "home_goalkeeper_shots_onTarget_against": home_goalkeeper_shots_onTarget_against.text if home_goalkeeper_shots_onTarget_against!= None else np.nan,
+        "home_goalkeeper_goals_against": home_goalkeeper_goals_against.text if home_goalkeeper_goals_against!= None else np.nan,
+        "home_goalkeeper_PSxG": home_goalkeeper_PSxG.text if home_goalkeeper_PSxG!= None else np.nan,
+        "home_goalkeeper_long_passes_completed": home_goalkeeper_long_passes_completed.text if home_goalkeeper_long_passes_completed!= None else np.nan,
+        "home_goalkeeper_long_passes_attempted": home_goalkeeper_long_passes_attempted.text if home_goalkeeper_long_passes_attempted!= None else np.nan,
+        "home_goalkeeper_short_passes_attempted": home_goalkeeper_short_passes_attempted.text if home_goalkeeper_short_passes_attempted!= None else np.nan,
+        "home_goalkeeper_throws_attempted": home_goalkeeper_throws_attempted.text if home_goalkeeper_throws_attempted!= None else np.nan,
+        "home_goalkeeper_average_pass_length": home_goalkeeper_average_pass_length.text if home_goalkeeper_average_pass_length!= None else np.nan,
+        "home_goalkeeper_goal_kicks_attempted": home_goalkeeper_goal_kicks_attempted.text if home_goalkeeper_goal_kicks_attempted!= None else np.nan,
+        "home_goalkeeper_average_goal_kick_length": home_goalkeeper_average_goal_kick_length.text if home_goalkeeper_average_goal_kick_length!= None else np.nan,
+        "home_goalkeeper_crosses_faced": home_goalkeeper_crosses_faced.text if home_goalkeeper_crosses_faced!= None else np.nan,
+        "home_goalkeeper_crosses_stopped": home_goalkeeper_crosses_stopped.text if home_goalkeeper_crosses_stopped!= None else np.nan,
+        "home_goalkeeper_OPA": home_goalkeeper_OPA.text if home_goalkeeper_OPA!= None else np.nan,
+        "home_goalkeeper_average_distance_def_action": home_goalkeeper_average_distance_def_action.text if home_goalkeeper_average_distance_def_action!= None else np.nan,
+        "away_goalkeeper_shots_onTarget_against": away_goalkeeper_shots_onTarget_against.text if away_goalkeeper_shots_onTarget_against!= None else np.nan,
+        "away_goalkeeper_goals_against": away_goalkeeper_goals_against.text if away_goalkeeper_goals_against!= None else np.nan,
+        "away_goalkeeper_PSxG": away_goalkeeper_PSxG.text if away_goalkeeper_PSxG!= None else np.nan,
+        "away_goalkeeper_long_passes_completed": away_goalkeeper_long_passes_completed.text if away_goalkeeper_long_passes_completed!= None else np.nan,
+        "away_goalkeeper_long_passes_attempted": away_goalkeeper_long_passes_attempted.text if away_goalkeeper_long_passes_attempted!= None else np.nan,
+        "away_goalkeeper_short_passes_attempted": away_goalkeeper_short_passes_attempted.text if away_goalkeeper_short_passes_attempted!= None else np.nan,
+        "away_goalkeeper_throws_attempted": away_goalkeeper_throws_attempted.text if away_goalkeeper_throws_attempted!= None else np.nan,
+        "away_goalkeeper_average_pass_length": away_goalkeeper_average_pass_length.text if away_goalkeeper_average_pass_length!= None else np.nan,
+        "away_goalkeeper_goal_kicks_attempted": away_goalkeeper_goal_kicks_attempted.text if away_goalkeeper_goal_kicks_attempted!= None else np.nan,
+        "away_goalkeeper_average_goal_kick_length": away_goalkeeper_average_goal_kick_length.text if away_goalkeeper_average_goal_kick_length!= None else np.nan,
+        "away_goalkeeper_crosses_faced": away_goalkeeper_crosses_faced.text if away_goalkeeper_crosses_faced!= None else np.nan,
+        "away_goalkeeper_crosses_stopped": away_goalkeeper_crosses_stopped.text if away_goalkeeper_crosses_stopped!= None else np.nan,
+        "away_goalkeeper_OPA": away_goalkeeper_OPA.text if away_goalkeeper_OPA!= None else np.nan,
+        "away_goalkeeper_average_distance_def_action": away_goalkeeper_average_distance_def_action.text if away_goalkeeper_average_distance_def_action!= None else np.nan,
     }
 
 async def get_page_content(url, page):
@@ -1526,37 +1526,37 @@ async def get_page_content(url, page):
 
     passing_button_home= filter_switcher_home_children[PASSING_INDEX]
     await passing_button_home.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
     passing_button_away= filter_switcher_away_children[PASSING_INDEX]
     await passing_button_away.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
 
     passing_stats = await get_passing_player_stats(page)
 
     defensive_actions_button_home= filter_switcher_home_children[DEFENSIVE_ACTIONS_INDEX]
     await defensive_actions_button_home.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
     defensive_actions_button_away= filter_switcher_away_children[DEFENSIVE_ACTIONS_INDEX]
     await defensive_actions_button_away.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
 
     defensive_actions_stats = await get_defensive_actions_player_stats(page)
 
     possession_button_home= filter_switcher_home_children[POSSESSION_INDEX]
     await possession_button_home.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
     possession_button_away= filter_switcher_away_children[POSSESSION_INDEX]
     await possession_button_away.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
 
     possession_stats=await get_possession_player_stats(page)
 
     miscellaneous_button_home= filter_switcher_home_children[MISCELLANEOUS_STATS_INDEX]
     await miscellaneous_button_home.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
     miscellaneous_button_away= filter_switcher_away_children[MISCELLANEOUS_STATS_INDEX]
     await miscellaneous_button_away.click()
-    await asyncio.sleep(2.0)  # 2 second delay  
+    # await asyncio.sleep(2.0)  # 2 second delay  
 
     miscellaneous_stats= await get_miscellaneous_player_stats(page)
 
@@ -1613,7 +1613,7 @@ async def get_page_content(url, page):
         'away_throw_ins': away_throw_ins.text if away_throw_ins != None else np.nan,
         'home_long_balls': home_long_balls.text if home_long_balls != None else np.nan,
         'away_long_balls': away_long_balls.text if away_long_balls != None else np.nan,
-    }+summary_stats+passing_stats+defensive_actions_stats+possession_stats+miscellaneous_stats+goalkeeper_stats
+    }|summary_stats|passing_stats|defensive_actions_stats|possession_stats|miscellaneous_stats|goalkeeper_stats
 
 
 async def scrape_all_club_matches_urls(url, page):
