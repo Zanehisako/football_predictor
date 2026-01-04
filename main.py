@@ -1700,10 +1700,12 @@ async def main():
         # Ensure you have a file named 'club_urls.csv' with a column 'club_url'
         # club_urls = pd.read_csv("club_urls_test.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_laliga.csv")['club_url'].tolist()
-        club_urls = pd.read_csv("club_urls_premierLeague.csv")['club_url'].tolist()
+        # club_urls = pd.read_csv("club_urls_premierLeague.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_bundesliga.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_ligue1.csv")['club_url'].tolist()
-        # clubs_urls = pd.read_csv("club_urls_serieA.csv")['club_url'].tolist()
+        # club_urls = pd.read_csv("club_urls_serieA.csv")['club_url'].tolist()
+        # club_urls = pd.read_csv("club_urls_others.csv")['club_url'].tolist()
+        club_urls = pd.read_csv("club_urls_laliga2024.csv")['club_url'].tolist()
 
         
         browser = await zd.start(headless=True)
