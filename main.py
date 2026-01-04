@@ -716,10 +716,53 @@ async def get_possession_player_stats(page):
         except:
             away_players_progressive_passes_recived = None
 
+    except:
+        print("Couldn't get possession stats")
 
+async def get_miscellaneous_player_stats(page):
+    try:
+        PKcon = await page.find_all("PKcon")
+        print("len PKcon:",len(PKcon))
 
+        tr= PKcon[0].parent  
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
+        players_stats_current_table_children = [child for child in players_stats_current_table.children ] 
+        footer = players_stats_current_table_children[FOOTER_INDEX]
+        footer_tr = footer.children[0]
+        print("getting home miscellaneous player stats")
 
+        try:
+            home_players_aerials_won = footer_tr.children[19]
+            print("home_players_aerials_won:", home_players_aerials_won.text)
+        except:
+            home_players_aerials_won = None
 
+        try:
+            home_players_aerials_lost = footer_tr.children[20]
+            print("home_players_aerials_lost:", home_players_aerials_lost.text)
+        except:
+            home_players_aerials_lost = None
+
+        tr= PKcon[1].parent  
+        tfoot= tr.parent
+        players_stats_current_table= tfoot.parent
+        players_stats_current_table_children = [child for child in players_stats_current_table.children ] 
+        footer = players_stats_current_table_children[FOOTER_INDEX]
+        footer_tr = footer.children[0]
+        print("getting away miscellaneous player stats")
+
+        try:
+            away_players_aerials_won = footer_tr.children[19]
+            print("away_players_aerials_won:", away_players_aerials_won.text)
+        except:
+            away_players_aerials_won = None
+
+        try:
+            away_players_aerials_lost = footer_tr.children[20]
+            print("away_players_aerials_lost:", away_players_aerials_lost.text)
+        except:
+            away_players_aerials_lost = None
 
     except:
         print("Couldn't get possession stats")
@@ -1129,6 +1172,14 @@ async def get_page_content(url, page):
 
     await get_possession_player_stats(page)
 
+    miscellaneous_button_home= filter_switcher_home_children[MISCELLANEOUS_STATS_INDEX]
+    await miscellaneous_button_home.click()
+    await asyncio.sleep(2.0)  # 2 second delay  
+    miscellaneous_button_away= filter_switcher_away_children[MISCELLANEOUS_STATS_INDEX]
+    await miscellaneous_button_away.click()
+    await asyncio.sleep(2.0)  # 2 second delay  
+
+    await get_miscellaneous_player_stats(page)
 
 
     
