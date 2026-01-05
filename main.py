@@ -5,6 +5,18 @@ import random
 import os
 import zendriver.cdp.network as network # Import the network module
 import numpy as np
+from pynput import keyboard
+
+stop = False
+
+def on_press(key):
+    global stop
+    try:
+        if key.char == 'q':
+            stop = True
+            return False  # stop listener
+    except AttributeError:
+        pass
 
 SUMMARY_INDEX = 0
 PASSING_INDEX = 1
@@ -1661,11 +1673,11 @@ async def scrape_all_club_matches_urls(url, page):
 async def scrape_all_club_matches(urls, page):
     print(f"Starting to scrape {len(urls)} matches...")
     results = []
-    
-    for i, url in enumerate(urls):
+    i=0
+    while stop == False and i < len(urls):
         print(f"\nProcessing {i+1}/{len(urls)}")
         try:
-            match_data = await get_page_content(url, page)
+            match_data = await get_page_content(urls[i], page)
             if match_data:
                 results.append(match_data)
             
@@ -1673,12 +1685,14 @@ async def scrape_all_club_matches(urls, page):
             # await asyncio.sleep(random.uniform(2, 4))
             
         except Exception as e:
-            print(f"Error on {url}: {e}")
-            continue
+            print(f"Error on {urls[i]}: {e}")
+        i+=1
 
     return pd.DataFrame(results)
 
 async def main():
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
     browser = None
     csv_file = "match_data.csv"
     
