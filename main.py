@@ -1719,7 +1719,10 @@ async def main():
         # club_urls = pd.read_csv("club_urls_ligue1.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_serieA.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_others.csv")['club_url'].tolist()
-        club_urls = pd.read_csv("club_urls_laliga2024.csv")['club_url'].tolist()
+
+        # club_urls = pd.read_csv("club_urls_laliga_2024.csv")['club_url'].tolist()
+        # club_urls = pd.read_csv("club_urls_premierLeague_2024.csv")['club_url'].tolist()
+        club_urls = pd.read_csv("club_urls_serieA_2024.csv")['club_url'].tolist()
 
         
         browser = await zd.start(headless=True)
