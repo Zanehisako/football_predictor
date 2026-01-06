@@ -1673,32 +1673,45 @@ async def scrape_all_club_matches_urls(url, page):
 async def scrape_all_club_matches(urls, page):
     print(f"Starting to scrape {len(urls)} matches...")
     results = []
-    i=0
-    while stop == False and i < len(urls):
-        print(f"\nProcessing {i+1}/{len(urls)}")
-        try:
-            match_data = await get_page_content(urls[i], page)
-            if match_data:
-                results.append(match_data)
-            
-            # Polite sleep to avoid IP bans
-            # await asyncio.sleep(random.uniform(2, 4))
-            
-        except Exception as e:
-            print(f"Error on {urls[i]}: {e}")
-        i+=1
+    
+    try:
+        for i, url in enumerate(urls):
+            print(f"\nProcessing {i+1}/{len(urls)}")
+            try:
+                # Pass the SAME page object to the function
+                match_data = await get_page_content(url, page)
+                
+                if match_data:
+                    results.append(match_data)
+                    
+                    # OPTIONAL: Save a temp backup every 10 matches just in case
+                    if len(results) % 10 == 0:
+                        pd.DataFrame(results).to_csv("match_data_backup.csv", index=False)
+                        print(f"   (Backup saved: {len(results)} matches)")
 
+                # Polite sleep
+                await asyncio.sleep(random.uniform(2, 4))
+
+            except asyncio.CancelledError:
+                print("\n🛑 Stop signal received! Stopping loop...")
+                raise # Re-raise to trigger the outer exception block
+            except Exception as e:
+                print(f"⚠️ Error on match {url}: {e}")
+                continue
+                
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        print(f"\n✋ Script Interrupted. Preserving {len(results)} scraped matches...")
+        
     return pd.DataFrame(results)
 
+        
 async def main():
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
     browser = None
     csv_file = "match_data.csv"
     
-    # 1. Load existing data to avoid duplicates
-    existing_urls = set()
+    # Load existing data
     df_old = pd.DataFrame()
+    existing_urls = set()
     
     if os.path.exists(csv_file):
         try:
@@ -1710,6 +1723,7 @@ async def main():
             print(f"Error reading CSV: {e}")
 
     try:
+        # Load club URLs list
         # Load the input file containing club stats pages
         # Ensure you have a file named 'club_urls.csv' with a column 'club_url'
         # club_urls = pd.read_csv("club_urls_test.csv")['club_url'].tolist()
@@ -1722,7 +1736,8 @@ async def main():
 
         # club_urls = pd.read_csv("club_urls_laliga_2024.csv")['club_url'].tolist()
         # club_urls = pd.read_csv("club_urls_premierLeague_2024.csv")['club_url'].tolist()
-        club_urls = pd.read_csv("club_urls_serieA_2024.csv")['club_url'].tolist()
+        # club_urls = pd.read_csv("club_urls_serieA_2024.csv")['club_url'].tolist()
+        club_urls = pd.read_csv("club_urls_bundesliga_2024.csv")['club_url'].tolist()
 
         
         browser = await zd.start(headless=True)
@@ -1730,22 +1745,22 @@ async def main():
 
         # # --- OPTIMIZATION: ENABLE NETWORK BLOCKING ---
         # # 1. Enable network tracking
-        # await page.send(network.enable())
+        await page.send(network.enable())
         
-        # # 2. Block heavy resources
-        # # Note the function name is 'set_blocked_ur_ls' not 'set_blocked_urls'
-        # await page.send(network.set_blocked_ur_ls(urls=[
-        #     "*.png", "*.jpg", "*.jpeg", "*.gif", "*.svg", "*.webp", # Images
-        #     "*.css",                                                # Styles (layouts)
-        #     "*.woff", "*.woff2",                                    # Fonts
-        #     "*doubleclick*", "*google-analytics*",                  # Ads/Tracking
-        #     "*googlesyndication*", "*adservice*",
-        #     "*facebook*", "*twitter*", "*youtube*"
-        # ]))
-        # print(f"   [Worker] Network blocking enabled (No images/ads)")
+        # 2. Block heavy resources
+        # Note the function name is 'set_blocked_ur_ls' not 'set_blocked_urls'
+        await page.send(network.set_blocked_ur_ls(urls=[
+            "*.png", "*.jpg", "*.jpeg", "*.gif", "*.svg", "*.webp", # Images
+            "*.css",                                                # Styles (layouts)
+            "*.woff", "*.woff2",                                    # Fonts
+            "*doubleclick*", "*google-analytics*",                  # Ads/Tracking
+            "*googlesyndication*", "*adservice*",
+            "*facebook*", "*twitter*", "*youtube*"
+        ]))
+        print(f"   [Worker] Network blocking enabled (No images/ads)")
         # ---------------------------------------------
-        
-        # 2. Collect ALL potential URLs
+
+        # 1. Collect URLs
         all_found_urls = []
         for url in club_urls:
             found = await scrape_all_club_matches_urls(url, page)
@@ -1754,37 +1769,53 @@ async def main():
         unique_found_urls = list(set(all_found_urls))
         print(f"Total unique URLs found: {len(unique_found_urls)}")
 
-        # 3. Filter out URLs already in the CSV
+        # 2. Filter
         urls_to_scrape = [u for u in unique_found_urls if u not in existing_urls]
         
         if not urls_to_scrape:
             print("No new matches found to scrape.")
         else:
             print(f"New matches to scrape: {len(urls_to_scrape)}")
+            
+            # --- THE IMPORTANT CHANGE IS HERE ---
+            # We await the scraper. If it returns partial data due to Ctrl+C,
+            # df_new will contain that partial data.
             df_new = await scrape_all_club_matches(urls_to_scrape, page)
             
+            # This part will now execute even if you interrupted the function above
             if not df_new.empty:
-                # Combine old and new data
+                print(f"\n💾 Saving {len(df_new)} new matches to CSV...")
+                
+                # Combine old and new
                 df_final = pd.concat([df_old, df_new], ignore_index=True)
                 
-                # Double check for duplicates
+                # Deduplicate
                 if 'match_url' in df_final.columns:
                     df_final = df_final.drop_duplicates(subset=['match_url'])
                 
-                # Save to CSV (This will add the new columns automatically)
+                # Save
                 df_final.to_csv(csv_file, index=False)
-                print(f"Successfully saved {len(df_final)} rows.")
+                print(f"✅ Successfully saved! Total rows: {len(df_final)}")
             else:
-                print("No data scraped.")
-        
-    except Exception as e:
-        print(f"An error occurred: {e}")
+                print("No data collected in this run.")
 
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        print("\n👋 Main execution interrupted by user.")
+        # The logic above already handles the saving inside scrape_all_club_matches return
+        # But we catch it here to prevent the ugly Traceback error.
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
     finally:
         if browser:
+            print("Closing browser...")
             await browser.stop() 
             print("Browser Stopped.")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        # Catch the final Ctrl+C at the very top level so it exits cleanly
+        pass
