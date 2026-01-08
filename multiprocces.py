@@ -220,7 +220,7 @@ async def scrape_club_match_urls(page, club_url):
 
 # --- 2. WORKER PROCESS LOGIC ---
 
-async def async_worker_main(club_urls, existing_urls):
+async def async_worker_main(urls/club_urls, existing_urls):
     """
     The async entry point for a single process.
     """
@@ -232,7 +232,7 @@ async def async_worker_main(club_urls, existing_urls):
         browser = await zd.start(headless=True) 
         page = await browser.get("about:blank")
         
-        for club_url in club_urls:
+        for club_url in urls/club_urls:
             # 1. Get List of Matches
             match_urls = await scrape_club_match_urls(page, club_url)
             
@@ -263,8 +263,8 @@ async def async_worker_main(club_urls, existing_urls):
 
 def run_worker_process(args):
     """Wrapper to run async code in a synchronous process."""
-    club_urls, existing_urls = args
-    return asyncio.run(async_worker_main(club_urls, existing_urls))
+    urls/club_urls, existing_urls = args
+    return asyncio.run(async_worker_main(urls/club_urls, existing_urls))
 
 # --- 3. MAIN CONTROLLER ---
 
@@ -283,7 +283,7 @@ def main():
             pass
 
     # Your list of clubs
-    all_club_urls = [
+    all_urls/club_urls = [
          # Spain
          "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats",
          "https://fbref.com/en/squads/206d90db/Barcelona-Stats",
@@ -404,18 +404,18 @@ def main():
     ]
     
     # Randomize to distribute load
-    random.shuffle(all_club_urls)
+    random.shuffle(all_urls/club_urls)
 
     # --- B. PREPARE BATCHES ---
     NUM_PROCESSES = 4 
     
-    chunk_size = math.ceil(len(all_club_urls) / NUM_PROCESSES)
+    chunk_size = math.ceil(len(all_urls/club_urls) / NUM_PROCESSES)
     batches = []
-    for i in range(0, len(all_club_urls), chunk_size):
-        batch = all_club_urls[i:i + chunk_size]
+    for i in range(0, len(all_urls/club_urls), chunk_size):
+        batch = all_urls/club_urls[i:i + chunk_size]
         batches.append((batch, existing_urls))
         
-    print(f"Starting {len(batches)} processes to scrape {len(all_club_urls)} clubs...")
+    print(f"Starting {len(batches)} processes to scrape {len(all_urls/club_urls)} clubs...")
 
     # --- C. RUN MULTIPROCESSING ---
     results_flat = []

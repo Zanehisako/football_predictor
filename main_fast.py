@@ -201,7 +201,7 @@ async def scrape_club_match_urls(page, club_url):
 
 # --- 2. WORKER LOGIC ---
 
-async def async_worker(club_urls, existing_urls):
+async def async_worker(urls/club_urls, existing_urls):
     """Worker process with IMAGE BLOCKING enabled (Fixed function name)."""
     browser = None
     collected_data = []
@@ -228,7 +228,7 @@ async def async_worker(club_urls, existing_urls):
         print(f"   [Worker] Network blocking enabled (No images/ads)")
         # ---------------------------------------------
         
-        for club in club_urls:
+        for club in urls/club_urls:
             # 1. Get Matches
             match_urls = await scrape_club_match_urls(page, club)
             new_urls = [u for u in match_urls if u not in existing_urls]
@@ -281,7 +281,7 @@ def main():
         except: pass
 
     # 2. Club List
-    club_urls = [
+    urls/club_urls = [
          "https://fbref.com/en/squads/53a2f082/Real-Madrid-Stats",
          "https://fbref.com/en/squads/206d90db/Barcelona-Stats",
          "https://fbref.com/en/squads/db3b9613/Atletico-Madrid-Stats",
@@ -293,18 +293,18 @@ def main():
          "https://fbref.com/en/squads/e2d8892c/Paris-Saint-Germain-Stats",
          # Add all your other URLs here...
     ]
-    random.shuffle(club_urls)
+    random.shuffle(urls/club_urls)
 
     # 3. Batching
-    chunk_size = math.ceil(len(club_urls) / NUM_PROCESSES)
+    chunk_size = math.ceil(len(urls/club_urls) / NUM_PROCESSES)
     batches = []
-    for i in range(0, len(club_urls), chunk_size):
-        batches.append((club_urls[i:i + chunk_size], existing_urls))
+    for i in range(0, len(urls/club_urls), chunk_size):
+        batches.append((urls/club_urls[i:i + chunk_size], existing_urls))
 
     print(f"--- STARTING BENCHMARK ---")
     print(f"Processes: {NUM_PROCESSES}")
     print(f"Headless: {HEADLESS}")
-    print(f"Total Clubs: {len(club_urls)}")
+    print(f"Total Clubs: {len(urls/club_urls)}")
     print("--------------------------")
 
     # 4. Execution

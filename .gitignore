@@ -2,3 +2,7 @@
 /__pycache__
 /arsenal.png
 main.ipynb
+odds_data/
+urls/
+models/
+match_data/
